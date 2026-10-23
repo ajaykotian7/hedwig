@@ -1,38 +1,20 @@
 package dev.ajaykotian.hedwig.ui.theme
 
 import androidx.compose.material3.Typography
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import dev.ajaykotian.hedwig.R
+import androidx.compose.ui.unit.sp
 
-/** Same weights as the old app's res/font/montserrat_family.xml. */
-val Montserrat = FontFamily(
-    Font(R.font.montserrat_thin, FontWeight.ExtraLight),
-    Font(R.font.montserrat_light, FontWeight.Light),
-    Font(R.font.montserrat_regular, FontWeight.Normal),
-    Font(R.font.montserrat_medium, FontWeight.Medium),
-    Font(R.font.montserrat_semibold, FontWeight.SemiBold),
-    Font(R.font.montserrat_bold, FontWeight.Bold),
-)
-
-private val Default = Typography()
-
-/** Material's default text styles, all switched to Montserrat (like android:fontFamily in the old XML theme). */
+// Same text styles as the WhatsApp clone reference (system font).
 val Typography = Typography(
-    displayLarge = Default.displayLarge.copy(fontFamily = Montserrat),
-    displayMedium = Default.displayMedium.copy(fontFamily = Montserrat),
-    displaySmall = Default.displaySmall.copy(fontFamily = Montserrat),
-    headlineLarge = Default.headlineLarge.copy(fontFamily = Montserrat),
-    headlineMedium = Default.headlineMedium.copy(fontFamily = Montserrat),
-    headlineSmall = Default.headlineSmall.copy(fontFamily = Montserrat),
-    titleLarge = Default.titleLarge.copy(fontFamily = Montserrat),
-    titleMedium = Default.titleMedium.copy(fontFamily = Montserrat),
-    titleSmall = Default.titleSmall.copy(fontFamily = Montserrat),
-    bodyLarge = Default.bodyLarge.copy(fontFamily = Montserrat),
-    bodyMedium = Default.bodyMedium.copy(fontFamily = Montserrat),
-    bodySmall = Default.bodySmall.copy(fontFamily = Montserrat),
-    labelLarge = Default.labelLarge.copy(fontFamily = Montserrat),
-    labelMedium = Default.labelMedium.copy(fontFamily = Montserrat),
-    labelSmall = Default.labelSmall.copy(fontFamily = Montserrat),
+    headlineSmall = TextStyle(fontWeight = FontWeight.W400, fontSize = 17.sp, lineHeight = 32.sp),
+    titleLarge = TextStyle(fontWeight = FontWeight.W700, fontSize = 20.sp, lineHeight = 28.sp),
+    titleMedium = TextStyle(fontWeight = FontWeight.W700, fontSize = 16.sp, lineHeight = 24.sp, letterSpacing = 0.1.sp),
+    titleSmall = TextStyle(fontWeight = FontWeight.W500, fontSize = 14.sp, lineHeight = 20.sp, letterSpacing = 0.1.sp),
+    bodyLarge = TextStyle(fontWeight = FontWeight.W400, fontSize = 16.sp, lineHeight = 24.sp, letterSpacing = 0.5.sp),
+    bodyMedium = TextStyle(fontWeight = FontWeight.W400, fontSize = 14.sp, lineHeight = 20.sp, letterSpacing = 0.25.sp),
+    bodySmall = TextStyle(fontWeight = FontWeight.W400, fontSize = 12.sp, lineHeight = 16.sp, letterSpacing = 0.4.sp),
+    labelLarge = TextStyle(fontWeight = FontWeight.W500, fontSize = 14.sp, lineHeight = 20.sp, letterSpacing = 0.1.sp),
+    labelMedium = TextStyle(fontWeight = FontWeight.W400, fontSize = 12.sp, lineHeight = 16.sp, letterSpacing = 0.5.sp),
+    labelSmall = TextStyle(fontWeight = FontWeight.W500, fontSize = 11.sp, lineHeight = 16.sp),
 )
