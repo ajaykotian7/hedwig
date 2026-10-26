@@ -27,11 +27,20 @@ data class HedwigColors(
     val selectedTab: Color,
     /** Floating action buttons, send button, unread badges. */
     val accent: Color,
+    /** The accent used for text and icons on the background: unread times, section labels, edit icons. */
+    val accentText: Color,
     val chatBackground: Color,
     val outgoingBubble: Color,
     val incomingBubble: Color,
     val secondaryText: Color,
     val readTick: Color,
+    /** Search fields, the message input bar, grouped settings sections. */
+    val panel: Color,
+    /** Text fields placed on [panel]. */
+    val field: Color,
+    /** The selected or open chat in a list. */
+    val selectedRow: Color,
+    val divider: Color,
 )
 
 private val LightHedwigColors = HedwigColors(
@@ -39,11 +48,16 @@ private val LightHedwigColors = HedwigColors(
     onTopBar = Color.White,
     selectedTab = Color.White,
     accent = HedwigPurple,
+    accentText = HedwigPurple,
     chatBackground = ChatBackgroundLight,
     outgoingBubble = HedwigPurpleLight,
     incomingBubble = Color.White,
-    secondaryText = Gray200,
+    secondaryText = TextSecondaryLight,
     readTick = ReadTickBlue,
+    panel = SurfaceLight,
+    field = Color.White,
+    selectedRow = SelectedLight,
+    divider = DividerLight,
 )
 
 private val DarkHedwigColors = HedwigColors(
@@ -51,21 +65,41 @@ private val DarkHedwigColors = HedwigColors(
     onTopBar = White200,
     selectedTab = HedwigLauncherBg,
     accent = HedwigPurple,
+    accentText = HedwigLauncherBg, // the purple is too dark for text on a dark background
     chatBackground = ChatBackgroundDark,
     outgoingBubble = HedwigPurpleDark,
     incomingBubble = DarkSlate200,
-    secondaryText = Gray200,
+    secondaryText = TextSecondaryDark,
     readTick = ReadTickBlue,
+    panel = SurfaceDark,
+    field = FieldDark,
+    selectedRow = SelectedDark,
+    divider = DividerDark,
 )
 
+// Material roles get the same tinted neutrals, so dialogs, menus, text fields and
+// dividers match the custom colors above without per-screen styling.
 private val LightColorScheme = lightColorScheme(
     primary = HedwigPurple,
     onPrimary = Color.White,
     primaryContainer = HedwigPurpleLight,
     onPrimaryContainer = HedwigPurple,
     secondary = HedwigPurpleLight,
+    secondaryContainer = SelectedLight,
+    onSecondaryContainer = TextLight,
     background = Color.White,
+    onBackground = TextLight,
     surface = Color.White,
+    onSurface = TextLight,
+    surfaceVariant = SurfaceLight,
+    onSurfaceVariant = TextSecondaryLight,
+    surfaceContainerLowest = Color.White,
+    surfaceContainerLow = SurfaceLowLight,
+    surfaceContainer = SurfaceLight,
+    surfaceContainerHigh = SurfaceHighLight,
+    surfaceContainerHighest = SurfaceHighestLight,
+    outline = OutlineLight,
+    outlineVariant = DividerLight,
 )
 
 // The old app never customized dark mode; this keeps the brand purple.
@@ -74,6 +108,21 @@ private val DarkColorScheme = darkColorScheme(
     onPrimary = Color(0xFF3A0080),
     primaryContainer = HedwigPurple,
     onPrimaryContainer = Color.White,
+    secondaryContainer = SelectedDark,
+    onSecondaryContainer = TextDark,
+    background = BackgroundDark,
+    onBackground = TextDark,
+    surface = BackgroundDark,
+    onSurface = TextDark,
+    surfaceVariant = SurfaceDark,
+    onSurfaceVariant = TextSecondaryDark,
+    surfaceContainerLowest = SurfaceLowestDark,
+    surfaceContainerLow = SurfaceLowDark,
+    surfaceContainer = SurfaceDark,
+    surfaceContainerHigh = SurfaceHighDark,
+    surfaceContainerHighest = FieldDark,
+    outline = OutlineDark,
+    outlineVariant = DividerDark,
 )
 
 private val LocalHedwigColors = staticCompositionLocalOf { LightHedwigColors }
