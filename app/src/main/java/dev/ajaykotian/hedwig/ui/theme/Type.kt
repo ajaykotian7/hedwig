@@ -5,8 +5,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-// Same text styles as the WhatsApp clone reference (system font).
+
 val Typography = Typography(
+    headlineLarge = TextStyle(fontWeight = FontWeight.ExtraBold, fontSize = 30.sp, lineHeight = 36.sp, letterSpacing = (-0.5).sp),
     headlineSmall = TextStyle(fontWeight = FontWeight.W400, fontSize = 17.sp, lineHeight = 32.sp),
     titleLarge = TextStyle(fontWeight = FontWeight.W700, fontSize = 20.sp, lineHeight = 28.sp),
     titleMedium = TextStyle(fontWeight = FontWeight.W700, fontSize = 16.sp, lineHeight = 24.sp, letterSpacing = 0.1.sp),
