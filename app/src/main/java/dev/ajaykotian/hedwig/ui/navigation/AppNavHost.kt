@@ -7,6 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import dev.ajaykotian.hedwig.ui.home.HomeScreen
+import dev.ajaykotian.hedwig.ui.login.LoginScreen
 
 @Composable
 fun AppNavHost(
@@ -21,9 +23,10 @@ fun AppNavHost(
         modifier = modifier,
     ) {
         composable<LoginRoute> {
-            PlaceholderScreen(
-                "Login",
-                "Log in" to { navController.navigateAndClearBackStack(ProfileSetupRoute) },
+            LoginScreen(
+                onLoggedIn = {
+                    navController.navigateAndClearBackStack(HomeRoute)
+                },
             )
         }
 
@@ -38,13 +41,10 @@ fun AppNavHost(
         }
 
         composable<HomeRoute> {
-            PlaceholderScreen(
-                "Home",
-                "New chat" to { navController.navigate(NewChatRoute) },
-                "Open a chat" to { navController.navigate(ChatRoute(otherUserId = "demo-user")) },
-                "Sign Out" to {
+            HomeScreen(
+                onSignOut = {
                     navController.navigateAndClearBackStack(LoginRoute)
-                },
+                }
             )
         }
 

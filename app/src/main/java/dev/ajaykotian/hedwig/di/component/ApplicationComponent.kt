@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Component
+import dev.ajaykotian.hedwig.data.AuthRepository
 import dev.ajaykotian.hedwig.di.ApplicationContext
 import dev.ajaykotian.hedwig.di.module.ApplicationModule
 import javax.inject.Singleton
@@ -19,4 +20,6 @@ interface ApplicationComponent {
     fun getFirebaseAuth(): FirebaseAuth
 
     fun getFirebaseFirestore(): FirebaseFirestore
+
+    fun getAuthRepository(): AuthRepository
 }

@@ -6,6 +6,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dev.ajaykotian.hedwig.HedwigApp
+import dev.ajaykotian.hedwig.data.AuthRepository
+import dev.ajaykotian.hedwig.data.AuthRepositoryImpl
 import dev.ajaykotian.hedwig.di.ApplicationContext
 import javax.inject.Singleton
 
@@ -24,4 +26,7 @@ class ApplicationModule(private val application: HedwigApp) {
     @Provides
     @Singleton
     fun provideFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance()
+
+    @Provides
+    fun provideAuthRepository(impl: AuthRepositoryImpl): AuthRepository = impl
 }

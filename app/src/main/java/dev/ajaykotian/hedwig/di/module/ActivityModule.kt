@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import dagger.Module
 import dagger.Provides
 import dev.ajaykotian.hedwig.MainViewModel
+import dev.ajaykotian.hedwig.data.AuthRepository
 import dev.ajaykotian.hedwig.di.ActivityContext
 import dev.ajaykotian.hedwig.ui.base.ViewModelProviderFactory
 
@@ -17,8 +18,8 @@ class ActivityModule(private val activity: ComponentActivity) {
     fun provideContext(): Context = activity
 
     @Provides
-    fun provideMainViewModel(): MainViewModel =
+    fun provideMainViewModel(authRepository: AuthRepository): MainViewModel =
         ViewModelProvider(activity, ViewModelProviderFactory(MainViewModel::class) {
-            MainViewModel()
+            MainViewModel(authRepository)
         })[MainViewModel::class.java]
 }

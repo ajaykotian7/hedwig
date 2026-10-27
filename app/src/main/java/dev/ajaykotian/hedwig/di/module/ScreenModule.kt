@@ -2,11 +2,12 @@ package dev.ajaykotian.hedwig.di.module
 
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
-import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
-import dev.ajaykotian.hedwig.ui.HelloViewModel
+import dev.ajaykotian.hedwig.data.AuthRepository
 import dev.ajaykotian.hedwig.ui.base.ViewModelProviderFactory
+import dev.ajaykotian.hedwig.ui.home.HomeViewModel
+import dev.ajaykotian.hedwig.ui.login.LoginViewModel
 
 
 @Module
@@ -16,8 +17,15 @@ class ScreenModule(private val owner: ViewModelStoreOwner) {
     fun provideViewModelStoreOwner(): ViewModelStoreOwner = owner
 
     @Provides
-    fun provideHelloViewModel(auth: FirebaseAuth): HelloViewModel =
-        ViewModelProvider(owner, ViewModelProviderFactory(HelloViewModel::class) {
-            HelloViewModel(auth)
-        })[HelloViewModel::class.java]
+    fun provideLoginViewModel(authRepository: AuthRepository): LoginViewModel =
+        ViewModelProvider(owner, ViewModelProviderFactory(LoginViewModel::class) {
+            LoginViewModel(authRepository)
+        })[LoginViewModel::class.java]
+
+
+    @Provides
+    fun provideHomeViewModel(authRepository: AuthRepository): HomeViewModel =
+        ViewModelProvider(owner, ViewModelProviderFactory(HomeViewModel::class) {
+            HomeViewModel(authRepository)
+        })[HomeViewModel::class.java]
 }
