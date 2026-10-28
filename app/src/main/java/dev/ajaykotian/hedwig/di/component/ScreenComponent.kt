@@ -6,6 +6,7 @@ import dev.ajaykotian.hedwig.di.ScreenScope
 import dev.ajaykotian.hedwig.di.module.ScreenModule
 import dev.ajaykotian.hedwig.ui.home.HomeViewModel
 import dev.ajaykotian.hedwig.ui.login.LoginViewModel
+import dev.ajaykotian.hedwig.ui.profile.ProfileViewModel
 
 
 @ScreenScope
@@ -15,5 +16,7 @@ interface ScreenComponent {
     fun getLoginViewModel(): LoginViewModel
 
     fun getHomeViewModel(): HomeViewModel
+
+    fun getProfileViewModel(): ProfileViewModel
 }
 

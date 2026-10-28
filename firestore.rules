@@ -1,0 +1,36 @@
+rules_version = '2';
+
+// Paste into Firebase console -> Firestore Database -> Rules.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // Profiles are readable by any signed-in user, writable only by their owner.
+    match /users/{userId} {
+      allow read: if signedIn();
+      allow write: if signedIn() && request.auth.uid == userId;
+    }
+
+    // Chat ids are "<uidA>_<uidB>" (sorted), so membership can be checked from the id alone.
+    match /chats/{chatId} {
+      allow get: if signedIn() && request.auth.uid in chatId.split('_');
+      allow list: if signedIn() && request.auth.uid in resource.data.participants;
+      allow create: if signedIn()
+        && request.auth.uid in chatId.split('_')
+        && request.resource.data.participants.hasOnly(chatId.split('_'));
+      allow update: if signedIn()
+        && request.auth.uid in resource.data.participants
+        && request.resource.data.participants == resource.data.participants;
+
+      match /messages/{messageId} {
+        allow read: if signedIn() && request.auth.uid in chatId.split('_');
+        allow create: if signedIn()
+          && request.auth.uid in chatId.split('_')
+          && request.resource.data.senderId == request.auth.uid;
+      }
+    }
+  }
+}

@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.PhoneAuthProvider
-import dev.ajaykotian.hedwig.data.AuthRepository
-import dev.ajaykotian.hedwig.data.PhoneAuthEvent
+import dev.ajaykotian.hedwig.data.repository.AuthRepository
+import dev.ajaykotian.hedwig.data.repository.PhoneAuthEvent
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

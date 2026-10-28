@@ -4,10 +4,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import dagger.Module
 import dagger.Provides
-import dev.ajaykotian.hedwig.data.AuthRepository
+import dev.ajaykotian.hedwig.data.repository.AuthRepository
+import dev.ajaykotian.hedwig.data.repository.UserRepository
 import dev.ajaykotian.hedwig.ui.base.ViewModelProviderFactory
 import dev.ajaykotian.hedwig.ui.home.HomeViewModel
 import dev.ajaykotian.hedwig.ui.login.LoginViewModel
+import dev.ajaykotian.hedwig.ui.profile.ProfileViewModel
 
 
 @Module
@@ -28,4 +30,10 @@ class ScreenModule(private val owner: ViewModelStoreOwner) {
         ViewModelProvider(owner, ViewModelProviderFactory(HomeViewModel::class) {
             HomeViewModel(authRepository)
         })[HomeViewModel::class.java]
+
+    @Provides
+    fun provideProfileViewModel(userRepository: UserRepository, authRepository: AuthRepository): ProfileViewModel =
+        ViewModelProvider(owner, ViewModelProviderFactory(ProfileViewModel::class) {
+            ProfileViewModel(userRepository, authRepository)
+        })[ProfileViewModel::class.java]
 }

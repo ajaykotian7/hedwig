@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import dev.ajaykotian.hedwig.ui.home.HomeScreen
 import dev.ajaykotian.hedwig.ui.login.LoginScreen
+import dev.ajaykotian.hedwig.ui.profile.ProfileSetupScreen
 
 @Composable
 fun AppNavHost(
@@ -25,17 +26,15 @@ fun AppNavHost(
         composable<LoginRoute> {
             LoginScreen(
                 onLoggedIn = {
-                    navController.navigateAndClearBackStack(HomeRoute)
+                    navController.navigateAndClearBackStack(ProfileSetupRoute)
                 },
             )
         }
 
         composable<ProfileSetupRoute> {
-            PlaceholderScreen(
-                "Profile setup",
-                "Save profile" to { navController.navigateAndClearBackStack(HomeRoute) },
-                "Sign Out" to {
-                    navController.navigateAndClearBackStack(LoginRoute)
+            ProfileSetupScreen(
+                onProfileSaved = {
+                    navController.navigateAndClearBackStack(HomeRoute)
                 },
             )
         }

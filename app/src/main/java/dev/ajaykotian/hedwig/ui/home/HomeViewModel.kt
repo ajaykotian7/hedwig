@@ -1,7 +1,7 @@
 package dev.ajaykotian.hedwig.ui.home
 
 import androidx.lifecycle.ViewModel
-import dev.ajaykotian.hedwig.data.AuthRepository
+import dev.ajaykotian.hedwig.data.repository.AuthRepository
 
 class HomeViewModel(private val authRepository: AuthRepository) : ViewModel() {
 

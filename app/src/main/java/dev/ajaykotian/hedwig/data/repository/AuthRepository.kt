@@ -1,4 +1,4 @@
-package dev.ajaykotian.hedwig.data
+package dev.ajaykotian.hedwig.data.repository
 
 import android.app.Activity
 import com.google.firebase.FirebaseException
