@@ -8,7 +8,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import dev.ajaykotian.hedwig.ui.base.PhoneDarkPreview
+import dev.ajaykotian.hedwig.ui.base.PhoneLightPreview
 import dev.ajaykotian.hedwig.ui.theme.HedwigTheme
 
 @Composable
@@ -23,7 +24,8 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview
+@PhoneLightPreview
+@PhoneDarkPreview
 @Composable
 private fun LoadingScreenPreview() {
     HedwigTheme {

@@ -68,6 +68,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.ajaykotian.hedwig.ui.base.ComponentPreviews
 import dev.ajaykotian.hedwig.ui.components.PrimaryButton
 import dev.ajaykotian.hedwig.ui.components.rememberErrorShake
 import dev.ajaykotian.hedwig.ui.theme.HedwigTheme
@@ -304,7 +305,7 @@ private fun ResendRow(
     }
 }
 
-@Preview(showBackground = true)
+@ComponentPreviews
 @Composable
 private fun OtpInputPreview() {
     HedwigTheme {

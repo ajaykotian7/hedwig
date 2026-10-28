@@ -1,6 +1,5 @@
 package dev.ajaykotian.hedwig.ui.login
 
-import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedContent
@@ -20,9 +19,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.ajaykotian.hedwig.ui.base.PhoneDarkPreview
+import dev.ajaykotian.hedwig.ui.base.PhoneLightPreview
 import dev.ajaykotian.hedwig.ui.base.screenViewModel
 import dev.ajaykotian.hedwig.ui.theme.HedwigTheme
 
@@ -98,12 +98,11 @@ private fun LoginContent(
 
 }
 
-@Preview(showBackground = true)
 @Composable
-private fun LoginPhonePreview() {
+private fun LoginPreview(state: LoginUIState) {
     HedwigTheme {
         LoginContent(
-            uiState = LoginUIState(mobileNumber = "9876587871"),
+            uiState = state,
             onMobileNumberChanged = {},
             onOtpChanged = {},
             onMobileSubmitted = {},
@@ -114,94 +113,43 @@ private fun LoginPhonePreview() {
     }
 }
 
-
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@PhoneLightPreview
 @Composable
-private fun DarkLoginPhonePreview() {
-    HedwigTheme {
-        LoginContent(
-            uiState = LoginUIState(mobileNumber = "9876587871", errorMessage = "Wrong number"),
-            onMobileNumberChanged = {},
-            onOtpChanged = {},
-            onMobileSubmitted = {},
-            resendOtp = {},
-            validateOtp = {},
-            onEditMobileNumber = {},
-        )
-    }
-}
+private fun PhoneTypingPreview() = LoginPreview(LoginUIState(mobileNumber = "98765432"))
 
-
-@Preview(showBackground = true)
+@PhoneDarkPreview
 @Composable
-private fun LoginPhoneErrorPreview() {
-    HedwigTheme {
-        LoginContent(
-            uiState = LoginUIState(mobileNumber = "9876587871", errorMessage = "Wrong number"),
-            onMobileNumberChanged = {},
-            onOtpChanged = {},
-            onMobileSubmitted = {},
-            resendOtp = {},
-            validateOtp = {},
-            onEditMobileNumber = {},
-        )
-    }
-}
+private fun PhoneEmptyDarkPreview() = LoginPreview(LoginUIState())
 
-@Preview(showBackground = true)
+@PhoneLightPreview
 @Composable
-private fun LoginOtpPreview() {
-    HedwigTheme {
-        LoginContent(
-            uiState = LoginUIState(
-                mobileNumber = "9876543210",
-                isOtpGenerated = true,
-                otp = "123",
-                resendCountdown = 42,
-            ),
-            onMobileNumberChanged = {},
-            onOtpChanged = {},
-            onMobileSubmitted = {},
-            resendOtp = {},
-            validateOtp = {},
-            onEditMobileNumber = {},
-        )
-    }
-}
+private fun PhoneErrorPreview() =
+    LoginPreview(LoginUIState(mobileNumber = "1234567890", errorMessage = "Invalid phone number."))
 
-@Preview(showBackground = true)
+@PhoneLightPreview
 @Composable
-private fun LoginErrorPreview() {
-    HedwigTheme {
-        LoginContent(
-            uiState = LoginUIState(
-                mobileNumber = "9876543210",
-                isOtpGenerated = true,
-                otp = "111111",
-                errorMessage = "The code you entered is incorrect.",
-            ),
-            onMobileNumberChanged = {},
-            onOtpChanged = {},
-            onMobileSubmitted = {},
-            resendOtp = {},
-            validateOtp = {},
-            onEditMobileNumber = {},
-        )
-    }
-}
+private fun PhoneSendingPreview() =
+    LoginPreview(LoginUIState(mobileNumber = "9876543210", isLoading = true))
 
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@PhoneLightPreview
 @Composable
-private fun LoginLoadingDarkPreview() {
-    HedwigTheme {
-        LoginContent(
-            uiState = LoginUIState(mobileNumber = "9876543210", isOtpGenerated = true, isLoading = true),
-            onMobileNumberChanged = {},
-            onOtpChanged = {},
-            onMobileSubmitted = {},
-            resendOtp = {},
-            validateOtp = {},
-            onEditMobileNumber = {},
-        )
-    }
-}
+private fun CodeTypingPreview() = LoginPreview(
+    LoginUIState(mobileNumber = "9876543210", isOtpGenerated = true, otp = "482", resendCountdown = 42),
+)
+
+@PhoneLightPreview
+@Composable
+private fun CodeVerifyingPreview() = LoginPreview(
+    LoginUIState(mobileNumber = "9876543210", isOtpGenerated = true, otp = "482913", resendCountdown = 37, isLoading = true),
+)
+
+@PhoneDarkPreview
+@Composable
+private fun CodeWrongDarkPreview() = LoginPreview(
+    LoginUIState(
+        mobileNumber = "9876543210",
+        isOtpGenerated = true,
+        otp = "482910",
+        errorMessage = "That code didn't match. Check the SMS and try again.",
+    ),
+)

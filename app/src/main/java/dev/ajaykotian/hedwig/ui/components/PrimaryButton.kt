@@ -1,8 +1,11 @@
 package dev.ajaykotian.hedwig.ui.components
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -15,8 +18,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import dev.ajaykotian.hedwig.ui.base.ComponentPreviews
 import dev.ajaykotian.hedwig.ui.theme.HedwigTheme
 
 
@@ -56,11 +59,14 @@ fun PrimaryButton(
 }
 
 
-@Preview
+@ComponentPreviews
 @Composable
 private fun PrimaryButtonPreview() {
     HedwigTheme {
-        PrimaryButton(text = "Submit", onClick = {})
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            PrimaryButton(text = "Get code", onClick = {})
+            PrimaryButton(text = "Get code", onClick = {}, enabled = false)
+            PrimaryButton(text = "Verify", onClick = {}, loading = true, loadingText = "Verifying…")
+        }
     }
 }
-
