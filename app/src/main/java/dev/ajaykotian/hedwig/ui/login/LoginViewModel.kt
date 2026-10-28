@@ -57,7 +57,11 @@ class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
     }
 
     fun onOtpChanged(value: String) {
-        val otp = value.filter(Char::isDigit).take(LoginUIState.OTP_LENGTH)
+        val current = _uiState.value
+        val typedOverError = current.errorMessage != null && value.length > current.otp.length
+        val otp = (if (typedOverError) value.takeLast(1) else value)
+            .filter(Char::isDigit)
+            .take(LoginUIState.OTP_LENGTH)
         _uiState.update { it.copy(otp = otp, errorMessage = null) }
         if (otp.length == LoginUIState.OTP_LENGTH) validateOtp()
     }
