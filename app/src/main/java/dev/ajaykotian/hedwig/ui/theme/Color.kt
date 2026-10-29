@@ -10,7 +10,6 @@ val GreyTranslucent = Color(0x7A000000)    // grey_translucent (overlays)
 val HedwigPurpleDark = Color(0xFF4A2580)   // outgoing bubbles in dark mode
 
 // Chat colors from the WhatsApp clone reference.
-val White200 = Color(0xFFE0E0E0)
 val DarkSlate200 = Color(0xFF232D36)
 val ChatBackgroundLight = Color(0xFFECE5DD)
 val ChatBackgroundDark = Color(0xFF0B141A)

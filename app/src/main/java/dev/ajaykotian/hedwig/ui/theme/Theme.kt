@@ -61,8 +61,8 @@ private val LightHedwigColors = HedwigColors(
 )
 
 private val DarkHedwigColors = HedwigColors(
-    topBar = DarkSlate200,
-    onTopBar = White200,
+    topBar = SurfaceHighDark,
+    onTopBar = TextDark,
     selectedTab = HedwigLauncherBg,
     accent = HedwigPurple,
     accentText = HedwigLauncherBg, // the purple is too dark for text on a dark background

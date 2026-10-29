@@ -3,7 +3,8 @@ package dev.ajaykotian.hedwig.ui.home
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.layout.Box
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -12,7 +13,9 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.automirrored.filled.Message
+import androidx.compose.material.icons.filled.AddComment
+import androidx.compose.material.icons.outlined.Forum
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -27,16 +30,17 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import dev.ajaykotian.hedwig.R
 import dev.ajaykotian.hedwig.ui.base.PhoneDarkPreview
 import dev.ajaykotian.hedwig.ui.base.PhoneLightPreview
 import dev.ajaykotian.hedwig.ui.base.screenViewModel
+import dev.ajaykotian.hedwig.ui.components.EmptyState
 import dev.ajaykotian.hedwig.ui.components.LightStatusBarIcons
 import dev.ajaykotian.hedwig.ui.theme.HedwigTheme
 import kotlinx.coroutines.launch
@@ -73,7 +77,12 @@ private fun HomeContent(
         topBar = {
             Column {
                 TopAppBar(
-                    title = { Text(stringResource(R.string.app_name)) },
+                    title = {
+                        Text(
+                            stringResource(R.string.app_name),
+                            style = MaterialTheme.typography.headlineLarge.copy(fontSize = 24.sp, lineHeight = 32.sp)
+                        )
+                    },
                     actions = {
                         IconButton(onClick = onSignOut) {
                             Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "Sign out")
@@ -90,21 +99,27 @@ private fun HomeContent(
                     containerColor = colors.topBar,
                     indicator = {
                         TabRowDefaults.PrimaryIndicator(
-                            modifier = Modifier.tabIndicatorOffset(pagerState.currentPage, matchContentSize = false),
+                            modifier = Modifier.tabIndicatorOffset(pagerState.currentPage, matchContentSize = true),
                             width = Dp.Unspecified,
-                            height = 3.dp,
                             color = colors.selectedTab
                         )
                     },
                     divider = {}
                 ) {
                     tabs.forEachIndexed { index, tab ->
+                        val selected = pagerState.currentPage == index
                         Tab(
-                            selected = pagerState.currentPage == index,
+                            selected = selected,
                             onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
                             selectedContentColor = colors.selectedTab,
                             unselectedContentColor = colors.onTopBar.copy(alpha = 0.7f),
-                            text = { Text(tab.title) }
+                            text = {
+                                Text(
+                                    tab.title,
+                                    style = MaterialTheme.typography.titleSmall.copy(fontSize = 15.sp),
+                                    fontWeight = if (selected) FontWeight.Bold else FontWeight.SemiBold,
+                                )
+                            }
                         )
                     }
                 }
@@ -113,8 +128,8 @@ private fun HomeContent(
         floatingActionButton = {
             AnimatedVisibility(
                 visible = tabs[pagerState.currentPage] == HomeTab.Chats,
-                enter = fadeIn(),
-                exit = fadeOut()
+                enter = fadeIn() + scaleIn(initialScale = 0.6f),
+                exit = fadeOut() + scaleOut(targetScale = 0.6f),
             ) {
                 FloatingActionButton(
                     onClick = onNewChatClick,
@@ -122,7 +137,7 @@ private fun HomeContent(
                     contentColor = Color.White,
                     shape = CircleShape,
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.Message, contentDescription = "New chat")
+                    Icon(Icons.Filled.AddComment, contentDescription = "New chat")
                 }
             }
         },
@@ -136,17 +151,21 @@ private fun HomeContent(
             beyondViewportPageCount = 1
         ) { page ->
             when (tabs[page]) {
-                HomeTab.Chats -> TabPlaceholder("Your chats will show up here")
-                HomeTab.Profile -> TabPlaceholder("Your profile will show up here")
+                HomeTab.Chats -> EmptyState(
+                    icon = Icons.Outlined.Forum,
+                    title = "No chats yet",
+                    message = "Tap the new chat button to message anyone on hedwig.",
+                    modifier = Modifier.fillMaxSize(),
+                )
+
+                HomeTab.Profile -> EmptyState(
+                    icon = Icons.Outlined.Person,
+                    title = "Your profile",
+                    message = "Your name, about and phone number will live here.",
+                    modifier = Modifier.fillMaxSize(),
+                )
             }
         }
-    }
-}
-
-@Composable
-private fun TabPlaceholder(text: String) {
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text, color = HedwigTheme.colors.secondaryText)
     }
 }
 

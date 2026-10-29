@@ -1,0 +1,62 @@
+/* Shared styles for the Home shell mocks. Values mirror ui/theme/Color.kt and Theme.kt. */
+:root {
+  --bg: #FFFFFF; --text: #1D1B20; --secondary: #6F6A78;
+  --bar: #8A38FF; --on-bar: #FFFFFF; --on-bar-dim: rgba(255, 255, 255, 0.7); --tab-selected: #FFFFFF;
+  --accent: #8A38FF; --accent-text: #8A38FF; --tint: #F0E6FE; --nav-pill: #1D1B20;
+}
+.dark {
+  --bg: #141218; --text: #E6E0E9; --secondary: #9C96A4;
+  --bar: #241F2A; --on-bar: #E6E0E9; --on-bar-dim: rgba(230, 224, 233, 0.7); --tab-selected: #DCC6FB;
+  --accent: #8A38FF; --accent-text: #DCC6FB; --tint: #2A2236; --nav-pill: #E6E0E9;
+}
+body { margin: 0; }
+
+.screen {
+  position: relative; width: 390px; height: 844px; overflow: hidden;
+  display: flex; flex-direction: column;
+  background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+/* Status bar + app bar + tabs read as one block. */
+.top { background: var(--bar); color: var(--on-bar); flex-shrink: 0; }
+.status {
+  height: 28px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between;
+  font-size: 14px; font-weight: 600;
+}
+.status-icons { display: flex; gap: 6px; align-items: center; }
+.appbar { height: 64px; padding: 0 4px 0 20px; display: flex; align-items: center; }
+.title { flex-grow: 1; font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
+.icon-button { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; }
+
+.tabs { position: relative; height: 48px; display: flex; }
+.tab {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 600; color: var(--on-bar-dim);
+}
+.tab.selected { font-weight: 700; color: var(--tab-selected); }
+.indicator {
+  position: absolute; bottom: 0; height: 3px; border-radius: 3px 3px 0 0; background: var(--tab-selected);
+}
+
+/* Pager: pages sit side by side; shift .pages to show a swipe in progress. */
+.pager { position: relative; flex-grow: 1; overflow: hidden; }
+.pages { display: flex; height: 100%; width: 780px; }
+.page { width: 390px; height: 100%; display: flex; align-items: center; justify-content: center; }
+
+.empty { width: 270px; margin-top: -48px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.empty-art {
+  width: 112px; height: 112px; border-radius: 50%; background: var(--tint); color: var(--accent-text);
+  display: flex; align-items: center; justify-content: center;
+}
+.empty h2 { margin: 24px 0 0; font-size: 20px; line-height: 28px; font-weight: 800; letter-spacing: -0.2px; }
+.empty p { margin: 8px 0 0; font-size: 14px; line-height: 21px; color: var(--secondary); }
+
+.fab {
+  position: absolute; right: 16px; bottom: 36px; width: 56px; height: 56px; border-radius: 50%;
+  background: var(--accent); color: #FFFFFF; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+/* Gesture navigation handle. */
+.nav { position: absolute; left: 0; right: 0; bottom: 0; height: 20px; display: flex; align-items: center; justify-content: center; }
+.nav::after { content: ""; width: 108px; height: 4px; border-radius: 2px; background: var(--nav-pill); opacity: 0.4; }
