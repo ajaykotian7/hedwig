@@ -1,26 +1,171 @@
 package dev.ajaykotian.hedwig.ui.home
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.automirrored.filled.Message
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import dev.ajaykotian.hedwig.R
+import dev.ajaykotian.hedwig.ui.base.PhoneDarkPreview
+import dev.ajaykotian.hedwig.ui.base.PhoneLightPreview
 import dev.ajaykotian.hedwig.ui.base.screenViewModel
+import dev.ajaykotian.hedwig.ui.components.LightStatusBarIcons
+import dev.ajaykotian.hedwig.ui.theme.HedwigTheme
+import kotlinx.coroutines.launch
+
+private enum class HomeTab(val title: String) {
+    Chats("Chats"),
+    Profile("Profile")
+}
 
 @Composable
-fun HomeScreen(homeViewModel: HomeViewModel = screenViewModel { getHomeViewModel() }, onSignOut: () -> Unit) {
-    Surface(color = MaterialTheme.colorScheme.background, modifier = Modifier.fillMaxSize()) {
-        Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("Home Screen for ${homeViewModel.currentUserPhone ?: "User"}")
-            Button(onClick = {
-                homeViewModel.signOut()
-                onSignOut()
-            }) { Text("Sign Out") }
+fun HomeScreen(onSignOut: () -> Unit, onNewChatClick: () -> Unit, homeViewModel: HomeViewModel = screenViewModel { getHomeViewModel() }) {
+    LightStatusBarIcons()
+    HomeContent(onSignOut = {
+        homeViewModel.signOut()
+        onSignOut()
+    }, onNewChatClick = onNewChatClick)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HomeContent(
+    onSignOut: () -> Unit,
+    onNewChatClick: () -> Unit,
+    initialTab: HomeTab = HomeTab.Chats
+) {
+    val colors = HedwigTheme.colors
+    val tabs = HomeTab.entries
+    val pagerState = rememberPagerState(
+        initialPage = tabs.indexOf(initialTab),
+        pageCount = { tabs.size }
+    )
+    val coroutineScope = rememberCoroutineScope()
+    Scaffold(
+        topBar = {
+            Column {
+                TopAppBar(
+                    title = { Text(stringResource(R.string.app_name)) },
+                    actions = {
+                        IconButton(onClick = onSignOut) {
+                            Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "Sign out")
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = colors.topBar,
+                        titleContentColor = colors.onTopBar,
+                        actionIconContentColor = colors.onTopBar
+                    )
+                )
+                PrimaryTabRow(
+                    selectedTabIndex = pagerState.currentPage,
+                    containerColor = colors.topBar,
+                    indicator = {
+                        TabRowDefaults.PrimaryIndicator(
+                            modifier = Modifier.tabIndicatorOffset(pagerState.currentPage, matchContentSize = false),
+                            width = Dp.Unspecified,
+                            height = 3.dp,
+                            color = colors.selectedTab
+                        )
+                    },
+                    divider = {}
+                ) {
+                    tabs.forEachIndexed { index, tab ->
+                        Tab(
+                            selected = pagerState.currentPage == index,
+                            onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
+                            selectedContentColor = colors.selectedTab,
+                            unselectedContentColor = colors.onTopBar.copy(alpha = 0.7f),
+                            text = { Text(tab.title) }
+                        )
+                    }
+                }
+            }
+        },
+        floatingActionButton = {
+            AnimatedVisibility(
+                visible = tabs[pagerState.currentPage] == HomeTab.Chats,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                FloatingActionButton(
+                    onClick = onNewChatClick,
+                    containerColor = colors.accent,
+                    contentColor = Color.White,
+                    shape = CircleShape,
+                ) {
+                    Icon(Icons.AutoMirrored.Filled.Message, contentDescription = "New chat")
+                }
+            }
+        },
+        containerColor = MaterialTheme.colorScheme.background
+    ) { innerPadding ->
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            beyondViewportPageCount = 1
+        ) { page ->
+            when (tabs[page]) {
+                HomeTab.Chats -> TabPlaceholder("Your chats will show up here")
+                HomeTab.Profile -> TabPlaceholder("Your profile will show up here")
+            }
         }
     }
 }
+
+@Composable
+private fun TabPlaceholder(text: String) {
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(text, color = HedwigTheme.colors.secondaryText)
+    }
+}
+
+
+@Composable
+private fun HomePreview(initialTab: HomeTab = HomeTab.Chats) {
+    HedwigTheme {
+        HomeContent(onSignOut = {}, onNewChatClick = {}, initialTab = initialTab)
+    }
+}
+
+@PhoneLightPreview
+@Composable
+private fun HomeChatsPreview() = HomePreview()
+
+@PhoneDarkPreview
+@Composable
+private fun HomeChatsDarkPreview() = HomePreview()
+
+@PhoneLightPreview
+@Composable
+private fun HomeProfilePreview() = HomePreview(initialTab = HomeTab.Profile)

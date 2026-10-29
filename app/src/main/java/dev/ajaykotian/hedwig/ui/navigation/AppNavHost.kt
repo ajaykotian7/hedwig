@@ -43,7 +43,8 @@ fun AppNavHost(
             HomeScreen(
                 onSignOut = {
                     navController.navigateAndClearBackStack(LoginRoute)
-                }
+                },
+                onNewChatClick = { navController.navigate(NewChatRoute) },
             )
         }
 
