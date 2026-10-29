@@ -1,0 +1,73 @@
+/* Shared styles for the profile setup mocks. Values mirror ui/theme/Color.kt and Theme.kt. */
+:root {
+  --bg: #FFFFFF; --text: #1D1B20; --secondary: #6F6A78; --muted: #8E8898;
+  --panel: #F6F2FC; --border: #EBE6F0; --accent: #8A38FF; --accent-text: #8A38FF;
+  --tint: #F0E6FE; --disabled-bg: #ECE5F6; --error: #B3261E; --error-tint: #FCEEEE;
+}
+.dark {
+  --bg: #141218; --text: #E6E0E9; --secondary: #9C96A4; --muted: #8E8898;
+  --panel: #1D1A22; --border: #2E2A35; --accent: #8A38FF; --accent-text: #DCC6FB;
+  --tint: #2A2236; --disabled-bg: #2A2631; --error: #F2B8B5; --error-tint: #2A1E22;
+}
+body { margin: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes blink { 50% { opacity: 0; } }
+
+.screen {
+  width: 390px; height: 844px; box-sizing: border-box; padding: 64px 24px 28px;
+  display: flex; flex-direction: column; overflow: hidden;
+  background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+h1 { margin: 0; font-size: 30px; line-height: 36px; font-weight: 800; letter-spacing: -0.6px; }
+.subtitle { margin: 10px 0 0; font-size: 15px; line-height: 22px; color: var(--secondary); }
+.label { font-size: 13px; font-weight: 600; color: var(--secondary); }
+
+/* Live preview card: looks like a row in the chat list. */
+.card {
+  margin-top: 8px; padding: 16px; border-radius: 20px; background: var(--panel);
+  display: flex; align-items: center; gap: 14px;
+}
+.avatar {
+  flex-shrink: 0; width: 56px; height: 56px; border-radius: 50%; background: #7F66FF;
+  display: flex; align-items: center; justify-content: center;
+  color: #FFFFFF; font-size: 21px; font-weight: 600;
+}
+.card-text { min-width: 0; flex-grow: 1; }
+.card-name { font-size: 16px; line-height: 22px; font-weight: 700; }
+.card-name.empty { color: var(--muted); font-weight: 600; }
+.card-about { margin-top: 2px; font-size: 14px; line-height: 20px; color: var(--secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.field {
+  margin-top: 8px; box-sizing: border-box; min-height: 60px; padding: 0 16px; border-radius: 16px;
+  background: var(--panel); border: 1.5px solid var(--border);
+  display: flex; align-items: center; font-size: 17px; font-weight: 600;
+}
+.field.focused { border: 2px solid var(--accent); padding: 0 15.5px; }
+.field.error { border: 2px solid var(--error); padding: 0 15.5px; }
+.field.multi { align-items: flex-start; padding-top: 18px; padding-bottom: 18px; min-height: 84px; font-weight: 500; font-size: 16px; line-height: 24px; }
+.placeholder { color: var(--muted); font-weight: 500; }
+.cursor { display: inline-block; width: 2px; height: 22px; margin-left: 1px; vertical-align: -4px; background: var(--accent); animation: blink 1s step-end infinite; }
+.support { margin-top: 8px; display: flex; justify-content: space-between; font-size: 12px; line-height: 16px; color: var(--secondary); }
+.count { font-feature-settings: "tnum"; }
+
+.chips { margin: 12px -24px 0 0; padding-right: 24px; display: flex; gap: 8px; overflow: hidden; }
+.chip {
+  flex-shrink: 0; height: 36px; padding: 0 14px; border-radius: 18px; box-sizing: border-box;
+  border: 1.5px solid var(--border); display: flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap;
+}
+.chip.selected { background: var(--tint); border-color: transparent; color: var(--accent-text); }
+
+.error-row { margin-top: 16px; display: flex; align-items: flex-start; gap: 8px; font-size: 14px; line-height: 20px; color: var(--error); }
+.error-row svg { flex-shrink: 0; margin-top: 1px; }
+
+.dimmed { opacity: 0.6; }
+.grow { flex-grow: 1; }
+
+.button {
+  height: 56px; border: none; border-radius: 28px; background: var(--accent); color: #FFFFFF;
+  font-family: inherit; font-size: 16px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.button:disabled { background: var(--disabled-bg); color: var(--secondary); }
+.hint { margin: 16px 0 0; font-size: 12px; line-height: 18px; color: var(--secondary); text-align: center; }

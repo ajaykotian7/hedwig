@@ -21,7 +21,6 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
@@ -45,6 +44,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.ajaykotian.hedwig.R
+import dev.ajaykotian.hedwig.ui.components.FieldLabel
+import dev.ajaykotian.hedwig.ui.components.HedwigTextFieldDefaults
 import dev.ajaykotian.hedwig.ui.components.PrimaryButton
 import dev.ajaykotian.hedwig.ui.components.rememberErrorShake
 import dev.ajaykotian.hedwig.ui.theme.HedwigTheme
@@ -67,14 +68,14 @@ internal fun ColumnScope.PhoneNumberView(uiState: LoginUIState, onValueChanged: 
         subtitle = "We'll text you a 6-digit code to make sure it's really you.",
     )
     Spacer(Modifier.height(36.dp))
-    Text("Mobile number", style = MaterialTheme.typography.labelLarge, color = HedwigTheme.colors.secondaryText)
+    FieldLabel("Mobile number")
     Spacer(Modifier.height(8.dp))
     OutlinedTextField(
         value = uiState.mobileNumber,
         onValueChange = onValueChanged,
         enabled = !uiState.isLoading,
         isError = isError,
-        shape = RoundedCornerShape(16.dp),
+        shape = HedwigTextFieldDefaults.Shape,
         textStyle = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold, letterSpacing = 1.sp),
         leadingIcon = { CountryCodeChip() },
         supportingText = {
@@ -84,14 +85,7 @@ internal fun ColumnScope.PhoneNumberView(uiState: LoginUIState, onValueChanged: 
             }
         },
         visualTransformation = PhoneNumberSpacing,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = HedwigTheme.colors.panel,
-            unfocusedContainerColor = HedwigTheme.colors.panel,
-            disabledContainerColor = HedwigTheme.colors.panel,
-            focusedBorderColor = HedwigTheme.colors.accent,
-            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
-            cursorColor = HedwigTheme.colors.accent,
-        ),
+        colors = HedwigTextFieldDefaults.colors(),
         singleLine = true,
         placeholder = { Text("10-digit number") },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone, imeAction = ImeAction.Done),

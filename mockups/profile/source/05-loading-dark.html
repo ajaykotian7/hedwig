@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Profile setup loading dark</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="profile.css">
+<style>
+.bone { border-radius: 8px; background: linear-gradient(90deg, #26222D 0%, #332E3B 50%, #26222D 100%); }
+</style>
+</head>
+<body>
+<div class="screen dark">
+  <h1>Set up your profile</h1>
+  <p class="subtitle">Add your name so friends know it's you.</p>
+
+  <div class="label" style="margin-top: 28px;">How you'll appear in chats</div>
+  <div class="card" aria-busy="true">
+    <div class="bone" style="width: 56px; height: 56px; border-radius: 50%; flex-shrink: 0;"></div>
+    <div class="card-text">
+      <div class="bone" style="width: 140px; height: 14px;"></div>
+      <div class="bone" style="width: 200px; height: 12px; margin-top: 10px;"></div>
+    </div>
+  </div>
+
+  <div class="label" style="margin-top: 24px;">Name</div>
+  <div class="field"><div class="bone" style="width: 120px; height: 14px;"></div></div>
+  <div class="support"><span>Shown to people you chat with</span><span></span></div>
+
+  <div class="label" style="margin-top: 16px;">About</div>
+  <div class="field multi"><div class="bone" style="width: 210px; height: 14px; margin-top: 5px;"></div></div>
+  <div class="support"><span></span><span></span></div>
+
+  <div class="grow"></div>
+
+  <button type="button" class="button" disabled>
+    Continue
+  </button>
+  <p class="hint">You can change these anytime.</p>
+</div>
+</body>
+</html>

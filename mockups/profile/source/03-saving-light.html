@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Profile setup saving</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="profile.css">
+</head>
+<body>
+<div class="screen">
+  <h1>Set up your profile</h1>
+  <p class="subtitle">Add your name so friends know it's you.</p>
+
+  <div class="label" style="margin-top: 28px;">How you'll appear in chats</div>
+  <div class="card">
+    <div class="avatar" aria-hidden="true">AK</div>
+    <div class="card-text">
+      <div class="card-name">Ajay Kotian</div>
+      <div class="card-about">At work</div>
+    </div>
+  </div>
+
+  <div class="dimmed">
+    <div class="label" style="margin-top: 24px;">Name</div>
+    <div class="field">Ajay Kotian</div>
+    <div class="support"><span>Shown to people you chat with</span><span class="count">11/25</span></div>
+
+    <div class="label" style="margin-top: 16px;">About</div>
+    <div class="field multi">At work</div>
+    <div class="support"><span></span><span class="count">7/139</span></div>
+
+    <div class="chips">
+      <div class="chip">Hey there! I am using hedwig.</div>
+      <div class="chip">Available</div>
+      <div class="chip">Busy</div>
+      <div class="chip selected"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"></path></svg>At work</div>
+    </div>
+  </div>
+
+  <div class="grow"></div>
+
+  <button type="button" class="button" disabled aria-busy="true">
+    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" style="animation: spin 0.9s linear infinite;"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity="0.3" stroke-width="3"></circle><path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path></svg>
+    Saving…
+  </button>
+  <p class="hint">You can change these anytime.</p>
+</div>
+</body>
+</html>
