@@ -9,6 +9,7 @@ import com.google.firebase.auth.PhoneAuthProvider
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -29,6 +30,8 @@ sealed interface PhoneAuthEvent {
 
 interface AuthRepository {
 
+    fun observeAuthState(): Flow<String?>
+
     val currentUserId: String?
     val currentUserPhone: String?
 
@@ -48,6 +51,12 @@ interface AuthRepository {
 
 @Singleton
 class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth) : AuthRepository {
+
+    override fun observeAuthState(): Flow<String?> = callbackFlow {
+        val listener = FirebaseAuth.AuthStateListener { trySend(it.currentUser?.uid) }
+        auth.addAuthStateListener(listener)
+        awaitClose { auth.removeAuthStateListener(listener) }
+    }.distinctUntilChanged()
 
     override val currentUserId: String? get() = auth.currentUser?.uid
     override val currentUserPhone: String? get() = auth.currentUser?.phoneNumber

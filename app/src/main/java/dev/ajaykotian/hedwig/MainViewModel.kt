@@ -7,13 +7,22 @@ import dev.ajaykotian.hedwig.data.repository.UserRepository
 import dev.ajaykotian.hedwig.ui.navigation.HomeRoute
 import dev.ajaykotian.hedwig.ui.navigation.LoginRoute
 import dev.ajaykotian.hedwig.ui.navigation.ProfileSetupRoute
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlin.coroutines.cancellation.CancellationException
 
 class MainViewModel(private val authRepository: AuthRepository, private val userRepository: UserRepository) : ViewModel() {
+
+    val signedOut: Flow<Unit> = authRepository.observeAuthState()
+        .drop(1)
+        .filter { it == null }
+        .map { }
 
     private val _startDestination = MutableStateFlow<Any?>(null)
     val startDestination: StateFlow<Any?> = _startDestination.asStateFlow()

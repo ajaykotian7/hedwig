@@ -1,6 +1,7 @@
 package dev.ajaykotian.hedwig.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -10,13 +11,19 @@ import androidx.navigation.toRoute
 import dev.ajaykotian.hedwig.ui.home.HomeScreen
 import dev.ajaykotian.hedwig.ui.login.LoginScreen
 import dev.ajaykotian.hedwig.ui.profile.ProfileSetupScreen
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun AppNavHost(
     startDestination: Any,
+    signedOut: Flow<Unit>,
     modifier: Modifier = Modifier,
 ) {
     val navController = rememberNavController()
+
+    LaunchedEffect(signedOut) {
+        signedOut.collect { navController.navigateAndClearBackStack(LoginRoute) }
+    }
 
     NavHost(
         navController = navController,
@@ -41,9 +48,6 @@ fun AppNavHost(
 
         composable<HomeRoute> {
             HomeScreen(
-                onSignOut = {
-                    navController.navigateAndClearBackStack(LoginRoute)
-                },
                 onNewChatClick = { navController.navigate(NewChatRoute) },
             )
         }
@@ -56,9 +60,6 @@ fun AppNavHost(
                         popUpTo<NewChatRoute> { inclusive = true }
                     }
                 },
-                "Sign Out" to {
-                    navController.navigateAndClearBackStack(LoginRoute)
-                },
             )
         }
 
@@ -67,9 +68,6 @@ fun AppNavHost(
             PlaceholderScreen(
                 "Chat with ${route.otherUserId}",
                 "Back" to { navController.popBackStack() },
-                "Sign Out" to {
-                    navController.navigateAndClearBackStack(LoginRoute)
-                },
             )
         }
     }

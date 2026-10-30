@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                     if (destination == null) {
                         LoadingScreen()
                     } else {
-                        AppNavHost(startDestination = destination)
+                        AppNavHost(startDestination = destination, signedOut = mainViewModel.signedOut)
                     }
                 }
             }

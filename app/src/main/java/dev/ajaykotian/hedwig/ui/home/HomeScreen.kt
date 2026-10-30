@@ -12,14 +12,11 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.AddComment
 import androidx.compose.material.icons.outlined.Forum
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
@@ -39,9 +36,9 @@ import androidx.compose.ui.unit.sp
 import dev.ajaykotian.hedwig.R
 import dev.ajaykotian.hedwig.ui.base.PhoneDarkPreview
 import dev.ajaykotian.hedwig.ui.base.PhoneLightPreview
-import dev.ajaykotian.hedwig.ui.base.screenViewModel
 import dev.ajaykotian.hedwig.ui.components.EmptyState
 import dev.ajaykotian.hedwig.ui.components.LightStatusBarIcons
+import dev.ajaykotian.hedwig.ui.profile.ProfileTab
 import dev.ajaykotian.hedwig.ui.theme.HedwigTheme
 import kotlinx.coroutines.launch
 
@@ -51,20 +48,20 @@ private enum class HomeTab(val title: String) {
 }
 
 @Composable
-fun HomeScreen(onSignOut: () -> Unit, onNewChatClick: () -> Unit, homeViewModel: HomeViewModel = screenViewModel { getHomeViewModel() }) {
+fun HomeScreen(onNewChatClick: () -> Unit) {
     LightStatusBarIcons()
-    HomeContent(onSignOut = {
-        homeViewModel.signOut()
-        onSignOut()
-    }, onNewChatClick = onNewChatClick)
+    HomeContent(
+        onNewChatClick = onNewChatClick,
+        profileTab = { ProfileTab() },
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HomeContent(
-    onSignOut: () -> Unit,
     onNewChatClick: () -> Unit,
-    initialTab: HomeTab = HomeTab.Chats
+    profileTab: @Composable () -> Unit,
+    initialTab: HomeTab = HomeTab.Chats,
 ) {
     val colors = HedwigTheme.colors
     val tabs = HomeTab.entries
@@ -82,11 +79,6 @@ private fun HomeContent(
                             stringResource(R.string.app_name),
                             style = MaterialTheme.typography.headlineLarge.copy(fontSize = 24.sp, lineHeight = 32.sp)
                         )
-                    },
-                    actions = {
-                        IconButton(onClick = onSignOut) {
-                            Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "Sign out")
-                        }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = colors.topBar,
@@ -158,12 +150,7 @@ private fun HomeContent(
                     modifier = Modifier.fillMaxSize(),
                 )
 
-                HomeTab.Profile -> EmptyState(
-                    icon = Icons.Outlined.Person,
-                    title = "Your profile",
-                    message = "Your name, about and phone number will live here.",
-                    modifier = Modifier.fillMaxSize(),
-                )
+                HomeTab.Profile -> profileTab()
             }
         }
     }
@@ -173,7 +160,11 @@ private fun HomeContent(
 @Composable
 private fun HomePreview(initialTab: HomeTab = HomeTab.Chats) {
     HedwigTheme {
-        HomeContent(onSignOut = {}, onNewChatClick = {}, initialTab = initialTab)
+        HomeContent(
+            onNewChatClick = {},
+            profileTab = {},
+            initialTab = initialTab,
+        )
     }
 }
 

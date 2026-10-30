@@ -78,16 +78,37 @@ class ProfileViewModel(private val userRepository: UserRepository, private val a
     fun saveProfile() {
         val state = _uiState.value
         if (!state.canSave) return
-        _uiState.update { it.copy(isSaving = true, errorMessage = null) }
+        save(
+            state.user.copy(
+                name = state.nameDraft.trim(),
+                about = state.aboutDraft.trim().ifBlank { User.DEFAULT_ABOUT },
+            )
+        )
+    }
 
+    /** Profile tab: saves just the name. */
+    fun updateName(name: String) {
+        val trimmed = name.trim()
+        if (trimmed.isEmpty() || _uiState.value.isLoading) return
+        save(_uiState.value.user.copy(name = trimmed.take(ProfileUIState.MAX_NAME_LENGTH)))
+    }
+
+    /** Profile tab: saves just the 'about'; blank falls back to the default. */
+    fun updateAbout(about: String) {
+        if (_uiState.value.isLoading) return
+        val cleaned = about.replace('\n', ' ').trim().take(ProfileUIState.MAX_ABOUT_LENGTH)
+        save(_uiState.value.user.copy(about = cleaned.ifBlank { User.DEFAULT_ABOUT }))
+    }
+
+    fun signOut() {
+        authRepository.signOut()
+    }
+
+    private fun save(user: User) {
+        _uiState.update { it.copy(isSaving = true, errorMessage = null) }
         viewModelScope.launch {
             try {
-                userRepository.saveUser(
-                    state.user.copy(
-                        name = state.nameDraft.trim(),
-                        about = state.aboutDraft.trim().ifBlank { User.DEFAULT_ABOUT },
-                    )
-                )
+                userRepository.saveUser(user)
                 _uiState.update { it.copy(isSaving = false, isSaved = true) }
             } catch (e: CancellationException) {
                 throw e

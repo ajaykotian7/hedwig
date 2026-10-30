@@ -7,7 +7,6 @@ import dagger.Provides
 import dev.ajaykotian.hedwig.data.repository.AuthRepository
 import dev.ajaykotian.hedwig.data.repository.UserRepository
 import dev.ajaykotian.hedwig.ui.base.ViewModelProviderFactory
-import dev.ajaykotian.hedwig.ui.home.HomeViewModel
 import dev.ajaykotian.hedwig.ui.login.LoginViewModel
 import dev.ajaykotian.hedwig.ui.profile.ProfileViewModel
 
@@ -23,13 +22,6 @@ class ScreenModule(private val owner: ViewModelStoreOwner) {
         ViewModelProvider(owner, ViewModelProviderFactory(LoginViewModel::class) {
             LoginViewModel(authRepository)
         })[LoginViewModel::class.java]
-
-
-    @Provides
-    fun provideHomeViewModel(authRepository: AuthRepository): HomeViewModel =
-        ViewModelProvider(owner, ViewModelProviderFactory(HomeViewModel::class) {
-            HomeViewModel(authRepository)
-        })[HomeViewModel::class.java]
 
     @Provides
     fun provideProfileViewModel(userRepository: UserRepository, authRepository: AuthRepository): ProfileViewModel =
