@@ -11,7 +11,7 @@ import dev.ajaykotian.hedwig.R
 
 private val BaseTypography = Typography(
     headlineLarge = TextStyle(fontWeight = FontWeight.ExtraBold, fontSize = 30.sp, lineHeight = 36.sp, letterSpacing = (-0.5).sp),
-    headlineSmall = TextStyle(fontWeight = FontWeight.W400, fontSize = 17.sp, lineHeight = 32.sp),
+    headlineSmall = TextStyle(fontWeight = FontWeight.ExtraBold, fontSize = 20.sp, lineHeight = 28.sp),
     titleLarge = TextStyle(fontWeight = FontWeight.W700, fontSize = 20.sp, lineHeight = 28.sp),
     titleMedium = TextStyle(fontWeight = FontWeight.W700, fontSize = 16.sp, lineHeight = 24.sp, letterSpacing = 0.1.sp),
     titleSmall = TextStyle(fontWeight = FontWeight.W500, fontSize = 14.sp, lineHeight = 20.sp, letterSpacing = 0.1.sp),

@@ -1,6 +1,9 @@
 package dev.ajaykotian.hedwig.ui.components
 
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -32,4 +35,15 @@ fun FieldLabel(text: String, modifier: Modifier = Modifier, enabled: Boolean = t
         color = HedwigTheme.colors.secondaryText.copy(alpha = if (enabled) 1f else 0.38f),
         modifier = modifier,
     )
+}
+
+/** A text field's supporting row: [hint] on the left, "count/max" in tabular digits on the right. */
+@Composable
+fun SupportingRow(hint: String?, count: Int?, max: Int) {
+    Row(Modifier.fillMaxWidth()) {
+        Text(hint.orEmpty(), modifier = Modifier.weight(1f))
+        if (count != null) {
+            Text("$count/$max", style = LocalTextStyle.current.copy(fontFeatureSettings = "tnum"))
+        }
+    }
 }

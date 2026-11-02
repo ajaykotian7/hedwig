@@ -24,7 +24,6 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -57,6 +56,7 @@ import dev.ajaykotian.hedwig.ui.components.FieldLabel
 import dev.ajaykotian.hedwig.ui.components.HedwigTextFieldDefaults
 import dev.ajaykotian.hedwig.ui.components.PrimaryButton
 import dev.ajaykotian.hedwig.ui.components.Shimmer
+import dev.ajaykotian.hedwig.ui.components.SupportingRow
 import dev.ajaykotian.hedwig.ui.login.StepHeader
 import dev.ajaykotian.hedwig.ui.theme.HedwigTheme
 
@@ -327,16 +327,6 @@ private fun AboutPresetChips(
                     selectedBorderColor = Color.Transparent
                 )
             )
-        }
-    }
-}
-
-@Composable
-private fun SupportingRow(hint: String?, count: Int?, max: Int) {
-    Row(Modifier.fillMaxWidth()) {
-        Text(hint.orEmpty(), modifier = Modifier.weight(1f))
-        if (count != null) {
-            Text("$count/$max", style = LocalTextStyle.current.copy(fontFeatureSettings = "tnum"))
         }
     }
 }
