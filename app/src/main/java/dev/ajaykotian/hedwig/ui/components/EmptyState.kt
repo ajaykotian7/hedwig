@@ -37,6 +37,7 @@ fun EmptyState(
     title: String,
     message: String,
     modifier: Modifier = Modifier,
+    action: (@Composable () -> Unit)? = null,
 ) {
     val colors = HedwigTheme.colors
     Column(
@@ -69,6 +70,10 @@ fun EmptyState(
             color = colors.secondaryText,
             textAlign = TextAlign.Center,
         )
+        if (action != null) {
+            Spacer(Modifier.height(24.dp))
+            action()
+        }
     }
 }
 

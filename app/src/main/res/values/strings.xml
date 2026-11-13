@@ -5,4 +5,9 @@
         <item quantity="one">%d contact</item>
         <item quantity="other">%d contacts</item>
     </plurals>
+
+    <plurals name="result_count">
+        <item quantity="one">%d result</item>
+        <item quantity="other">%d results</item>
+    </plurals>
 </resources>

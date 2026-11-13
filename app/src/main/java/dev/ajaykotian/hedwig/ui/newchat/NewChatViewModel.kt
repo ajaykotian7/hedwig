@@ -35,7 +35,9 @@ class NewChatViewModel(
     val uiState: StateFlow<NewChatUIState> =
         combine(userRepository.observeAllUsers(), snapshotFlow { query }) { users, query ->
             // Everyone except you, and only people who finished profile setup.
-            val contacts = users.filter { it.uid != uid && it.name.isNotBlank() }
+            val contacts = users
+                .filter { it.uid != uid && it.name.isNotBlank() }
+                .sortedBy { it.name.lowercase() }
             NewChatUIState(isLoading = false, query = query, users = contacts.matching(query))
         }
             .catch { e -> emit(NewChatUIState(isLoading = false, errorMessage = e.message ?: "Couldn't load contacts")) }

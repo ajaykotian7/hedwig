@@ -37,6 +37,7 @@ import dev.ajaykotian.hedwig.R
 import dev.ajaykotian.hedwig.ui.base.PhoneDarkPreview
 import dev.ajaykotian.hedwig.ui.base.PhoneLightPreview
 import dev.ajaykotian.hedwig.ui.components.EmptyState
+import dev.ajaykotian.hedwig.ui.components.HedwigTopAppBarDefaults
 import dev.ajaykotian.hedwig.ui.components.LightStatusBarIcons
 import dev.ajaykotian.hedwig.ui.profile.ProfileTab
 import dev.ajaykotian.hedwig.ui.theme.HedwigTheme
@@ -80,11 +81,7 @@ private fun HomeContent(
                             style = MaterialTheme.typography.headlineLarge.copy(fontSize = 24.sp, lineHeight = 32.sp)
                         )
                     },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = colors.topBar,
-                        titleContentColor = colors.onTopBar,
-                        actionIconContentColor = colors.onTopBar
-                    )
+                    colors = HedwigTopAppBarDefaults.colors()
                 )
                 PrimaryTabRow(
                     selectedTabIndex = pagerState.currentPage,
