@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import dev.ajaykotian.hedwig.ui.home.HomeScreen
 import dev.ajaykotian.hedwig.ui.login.LoginScreen
+import dev.ajaykotian.hedwig.ui.newchat.NewChatScreen
 import dev.ajaykotian.hedwig.ui.profile.ProfileSetupScreen
 import kotlinx.coroutines.flow.Flow
 
@@ -53,10 +54,10 @@ fun AppNavHost(
         }
 
         composable<NewChatRoute> {
-            PlaceholderScreen(
-                "New chat",
-                "Pick a contact" to {
-                    navController.navigate(ChatRoute(otherUserId = "demo-user")) {
+            NewChatScreen(
+                onBackClick = { navController.popBackStack() },
+                onContactClick = { uid ->
+                    navController.navigate(ChatRoute(otherUserId = uid)) {
                         popUpTo<NewChatRoute> { inclusive = true }
                     }
                 },

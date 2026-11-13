@@ -8,6 +8,7 @@ import dev.ajaykotian.hedwig.data.repository.AuthRepository
 import dev.ajaykotian.hedwig.data.repository.UserRepository
 import dev.ajaykotian.hedwig.ui.base.ViewModelProviderFactory
 import dev.ajaykotian.hedwig.ui.login.LoginViewModel
+import dev.ajaykotian.hedwig.ui.newchat.NewChatViewModel
 import dev.ajaykotian.hedwig.ui.profile.ProfileViewModel
 
 
@@ -28,4 +29,10 @@ class ScreenModule(private val owner: ViewModelStoreOwner) {
         ViewModelProvider(owner, ViewModelProviderFactory(ProfileViewModel::class) {
             ProfileViewModel(userRepository, authRepository)
         })[ProfileViewModel::class.java]
+
+    @Provides
+    fun provideNewChatViewModel(userRepository: UserRepository, authRepository: AuthRepository): NewChatViewModel =
+        ViewModelProvider(owner, ViewModelProviderFactory(NewChatViewModel::class) {
+            NewChatViewModel(userRepository, authRepository)
+        })[NewChatViewModel::class.java]
 }

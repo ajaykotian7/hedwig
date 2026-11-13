@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">hedwig</string>
+
+    <plurals name="contact_count">
+        <item quantity="one">%d contact</item>
+        <item quantity="other">%d contacts</item>
+    </plurals>
 </resources>
