@@ -5,6 +5,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Component
 import dev.ajaykotian.hedwig.data.repository.AuthRepository
+import dev.ajaykotian.hedwig.data.repository.ChatRepository
 import dev.ajaykotian.hedwig.data.repository.UserRepository
 import dev.ajaykotian.hedwig.di.ApplicationContext
 import dev.ajaykotian.hedwig.di.module.ApplicationModule
@@ -25,4 +26,6 @@ interface ApplicationComponent {
     fun getAuthRepository(): AuthRepository
 
     fun getUserRepository(): UserRepository
+
+    fun getChatRepository(): ChatRepository
 }

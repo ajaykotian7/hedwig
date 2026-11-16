@@ -8,6 +8,8 @@ import dagger.Provides
 import dev.ajaykotian.hedwig.HedwigApp
 import dev.ajaykotian.hedwig.data.repository.AuthRepository
 import dev.ajaykotian.hedwig.data.repository.AuthRepositoryImpl
+import dev.ajaykotian.hedwig.data.repository.ChatRepository
+import dev.ajaykotian.hedwig.data.repository.ChatRepositoryImpl
 import dev.ajaykotian.hedwig.data.repository.UserRepository
 import dev.ajaykotian.hedwig.data.repository.UserRepositoryImpl
 import dev.ajaykotian.hedwig.di.ApplicationContext
@@ -34,4 +36,7 @@ class ApplicationModule(private val application: HedwigApp) {
 
     @Provides
     fun provideUserRepository(impl: UserRepositoryImpl): UserRepository = impl
+
+    @Provides
+    fun provideChatRepository(impl: ChatRepositoryImpl): ChatRepository = impl
 }

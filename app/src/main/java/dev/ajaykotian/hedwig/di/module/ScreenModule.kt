@@ -5,8 +5,10 @@ import androidx.lifecycle.ViewModelStoreOwner
 import dagger.Module
 import dagger.Provides
 import dev.ajaykotian.hedwig.data.repository.AuthRepository
+import dev.ajaykotian.hedwig.data.repository.ChatRepository
 import dev.ajaykotian.hedwig.data.repository.UserRepository
 import dev.ajaykotian.hedwig.ui.base.ViewModelProviderFactory
+import dev.ajaykotian.hedwig.ui.chat.ChatViewModel
 import dev.ajaykotian.hedwig.ui.login.LoginViewModel
 import dev.ajaykotian.hedwig.ui.newchat.NewChatViewModel
 import dev.ajaykotian.hedwig.ui.profile.ProfileViewModel
@@ -35,4 +37,14 @@ class ScreenModule(private val owner: ViewModelStoreOwner) {
         ViewModelProvider(owner, ViewModelProviderFactory(NewChatViewModel::class) {
             NewChatViewModel(userRepository, authRepository)
         })[NewChatViewModel::class.java]
+
+    @Provides
+    fun provideChatViewModel(
+        authRepository: AuthRepository,
+        userRepository: UserRepository,
+        chatRepository: ChatRepository,
+    ): ChatViewModel =
+        ViewModelProvider(owner, ViewModelProviderFactory(ChatViewModel::class) { savedStateHandle ->
+            ChatViewModel(savedStateHandle, authRepository, userRepository, chatRepository)
+        })[ChatViewModel::class.java]
 }

@@ -7,7 +7,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
+import dev.ajaykotian.hedwig.ui.chat.ChatScreen
 import dev.ajaykotian.hedwig.ui.home.HomeScreen
 import dev.ajaykotian.hedwig.ui.login.LoginScreen
 import dev.ajaykotian.hedwig.ui.newchat.NewChatScreen
@@ -64,12 +64,8 @@ fun AppNavHost(
             )
         }
 
-        composable<ChatRoute> { backStackEntry ->
-            val route = backStackEntry.toRoute<ChatRoute>()
-            PlaceholderScreen(
-                "Chat with ${route.otherUserId}",
-                "Back" to { navController.popBackStack() },
-            )
+        composable<ChatRoute> {
+            ChatScreen(onBackClick = { navController.popBackStack() })
         }
     }
 }
