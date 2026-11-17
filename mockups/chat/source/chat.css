@@ -1,0 +1,105 @@
+/* Shared styles for the Chat mocks (Phase 9a polish). Values mirror ui/theme/Color.kt and Theme.kt. */
+:root {
+  --chat-bg: #ECE5DD; --text: #1D1B20; --secondary: #6F6A78;
+  --bar: #8A38FF; --on-bar: #FFFFFF; --on-bar-dim: rgba(255, 255, 255, 0.75);
+  --accent: #8A38FF; --accent-text: #8A38FF;
+  --bubble-out: #E9DBFD; --bubble-in: #FFFFFF; --time-out: #6F6A78; --time-in: #6F6A78;
+  --field: #FFFFFF; --shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+  --error-bg: #F9DEDC; --on-error: #410E0B;
+  --keyboard: #E9E4EF; --key: #FFFFFF; --nav-pill: #1D1B20;
+  --bone: rgba(29, 27, 32, 0.08); --bone-hi: rgba(29, 27, 32, 0.16);
+  --bar-bone: rgba(255, 255, 255, 0.18);
+}
+.dark {
+  /* New dark tokens: chatBackground = BackgroundDark, incomingBubble = SurfaceHighDark (see README). */
+  --chat-bg: #141218; --text: #E6E0E9; --secondary: #9C96A4;
+  --bar: #241F2A; --on-bar: #E6E0E9; --on-bar-dim: rgba(230, 224, 233, 0.75);
+  --accent: #8A38FF; --accent-text: #DCC6FB;
+  --bubble-out: #4A2580; --bubble-in: #241F2A; --time-out: rgba(230, 224, 233, 0.7); --time-in: #9C96A4;
+  --field: #241F2A; --shadow: none;
+  --error-bg: #8C1D18; --on-error: #F9DEDC;
+  --keyboard: #1D1A22; --key: #2A2631; --nav-pill: #E6E0E9;
+  --bone: rgba(230, 224, 233, 0.07); --bone-hi: rgba(230, 224, 233, 0.14);
+  --bar-bone: rgba(230, 224, 233, 0.12);
+}
+body { margin: 0; }
+@keyframes blink { 50% { opacity: 0; } }
+
+.screen {
+  position: relative; width: 390px; height: 844px; overflow: hidden;
+  display: flex; flex-direction: column;
+  background: var(--chat-bg); color: var(--text); font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+/* Top bar: status bar + app bar in one block, like the other screens. */
+.top { background: var(--bar); color: var(--on-bar); flex-shrink: 0; }
+.status { height: 28px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; font-size: 14px; font-weight: 600; }
+.status-icons { display: flex; gap: 6px; align-items: center; }
+.appbar { height: 64px; padding: 0 4px; display: flex; align-items: center; }
+.icon-button { flex-shrink: 0; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; }
+.peer { flex-grow: 1; min-width: 0; display: flex; align-items: center; gap: 12px; padding-right: 16px; }
+.avatar { flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #FFFFFF; font-size: 16px; font-weight: 500; }
+.peer-text { min-width: 0; }
+.peer-name { font-size: 17px; line-height: 22px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.peer-sub { font-size: 13px; line-height: 18px; color: var(--on-bar-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Messages: anchored to the bottom like a reversed LazyColumn; older ones are clipped at the top. */
+.messages { flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: 8px 12px; position: relative; }
+.messages.mid { justify-content: flex-start; }
+.msg { display: flex; margin-top: 2px; }
+.msg.first { margin-top: 8px; }
+.msg.mine { justify-content: flex-end; padding-left: 56px; }
+.msg.theirs { justify-content: flex-start; padding-right: 56px; }
+.bubble { position: relative; padding: 6px 10px 7px; border-radius: 12px; box-shadow: var(--shadow);
+  font-size: 15px; line-height: 21px; overflow-wrap: anywhere; }
+.mine .bubble { background: var(--bubble-out); }
+.theirs .bubble { background: var(--bubble-in); }
+.mine.first .bubble { border-top-right-radius: 4px; }
+.theirs.first .bubble { border-top-left-radius: 4px; }
+/* Reserves room for the time at the end of the last line; wraps to its own line when it doesn't fit. */
+.spacer { display: inline-block; width: 60px; height: 1px; }
+.time { position: absolute; right: 10px; bottom: 5px; font-size: 11px; line-height: 14px; font-feature-settings: "tnum"; white-space: nowrap; }
+.mine .time { color: var(--time-out); }
+.theirs .time { color: var(--time-in); }
+
+/* "Jump to newest" button, shown only when scrolled away from the bottom. */
+.jump { position: absolute; right: 12px; bottom: 12px; width: 40px; height: 40px; border-radius: 50%;
+  background: var(--bubble-in); color: var(--secondary); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+  display: flex; align-items: center; justify-content: center; }
+
+/* Composer: a floating pill field and a round send button, straight on the chat background. */
+.composer { flex-shrink: 0; display: flex; align-items: flex-end; gap: 8px; padding: 6px 8px 8px; }
+.field { flex: 1; min-width: 0; min-height: 48px; box-sizing: border-box; padding: 13px 20px; border-radius: 24px;
+  background: var(--field); box-shadow: var(--shadow); font-size: 16px; line-height: 22px; }
+.field .placeholder { color: var(--secondary); }
+.cursor { display: inline-block; width: 2px; height: 20px; margin-left: 1px; vertical-align: -4px; background: var(--accent); animation: blink 1s step-end infinite; }
+.send { flex-shrink: 0; width: 48px; height: 48px; border-radius: 50%; background: var(--accent); color: #FFFFFF;
+  display: flex; align-items: center; justify-content: center; }
+.send.disabled { opacity: 0.4; }
+
+/* Send error: a pill above the composer, readable on the wallpaper. */
+.error-pill { align-self: center; margin: 4px 16px 2px; padding: 8px 14px; border-radius: 12px; background: var(--error-bg); color: var(--on-error);
+  display: flex; align-items: center; gap: 8px; font-size: 13px; line-height: 18px; font-weight: 600; flex-shrink: 0; }
+
+/* Empty chat: a card, so the text stays readable on the wallpaper. */
+.empty { flex: 1; display: flex; align-items: center; justify-content: center; padding: 0 40px 40px; }
+.empty-card { width: 100%; max-width: 280px; box-sizing: border-box; padding: 24px 24px 20px; border-radius: 24px; background: var(--bubble-in); box-shadow: var(--shadow); text-align: center; }
+.empty-card h2 { margin: 0; font-size: 18px; line-height: 26px; font-weight: 800; letter-spacing: -0.2px; }
+.empty-card p { margin: 6px 0 0; font-size: 14px; line-height: 21px; color: var(--secondary); }
+.wave { margin: 16px auto 0; width: 96px; height: 96px; border-radius: 50%; background: var(--chat-bg); display: flex; align-items: center; justify-content: center; font-size: 52px; }
+.wave-label { margin-top: 8px; font-size: 13px; font-weight: 700; color: var(--accent-text); }
+
+/* Skeleton */
+.bone { background: linear-gradient(90deg, var(--bone) 0%, var(--bone-hi) 50%, var(--bone) 100%); border-radius: 12px; }
+.bar-bone { background: var(--bar-bone); }
+
+/* Keyboard */
+.keyboard { flex-shrink: 0; height: 292px; padding: 10px 4px 28px; box-sizing: border-box; background: var(--keyboard); display: flex; flex-direction: column; gap: 10px; }
+.keys { display: flex; gap: 6px; justify-content: center; }
+.key { width: 32px; height: 46px; border-radius: 6px; background: var(--key); box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12); display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--text); }
+.key.wide { width: 52px; }
+.key.space { width: 180px; }
+
+.nav { flex-shrink: 0; height: 20px; display: flex; align-items: center; justify-content: center; }
+.nav::after { content: ""; width: 108px; height: 4px; border-radius: 2px; background: var(--nav-pill); opacity: 0.4; }
+.keyboard + .nav { position: absolute; left: 0; right: 0; bottom: 0; }

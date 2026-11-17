@@ -1,5 +1,6 @@
 package dev.ajaykotian.hedwig.ui.chat
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -26,6 +27,8 @@ import kotlin.coroutines.cancellation.CancellationException
 data class MessageItem(
     val message: Message,
     val isMine: Boolean,
+    //First message in group of consecutive messages by the same sender
+    val isFirstInGroup: Boolean,
 )
 
 data class ChatUIState(
@@ -59,7 +62,13 @@ class ChatViewModel(
         ChatUIState(
             isLoading = false,
             otherUser = otherUser ?: User(uid = otherUserId),
-            messages = messages.map { MessageItem(it, isMine = it.senderId == myUid) },
+            messages = messages.mapIndexed { index, message ->
+                MessageItem(
+                    message = message,
+                    isMine = message.senderId == myUid,
+                    isFirstInGroup = index == 0 || messages[index - 1].senderId != message.senderId,
+                )
+            },
             errorMessage = error,
         )
     }
@@ -73,7 +82,13 @@ class ChatViewModel(
     fun sendMessage() {
         val text = messageText.trim()
         if (text.isEmpty()) return
-        messageText = "" // clear right away. Local Cache will show the message now
+        messageText = "" // clear right away. The local cache shows the message now
+        send(text, restoreOnFailure = true)
+    }
+
+    fun sendWave() = send("👋", restoreOnFailure = false)
+
+    private fun send(text: String, restoreOnFailure: Boolean) {
         sendError.value = null
         viewModelScope.launch {
             try {
@@ -81,10 +96,12 @@ class ChatViewModel(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                sendError.value = e.message ?: "Message not sent"
-                //Message sending failed so populate the input again
-                if (messageText.isEmpty()) messageText = text
+                Log.w(TAG, "Send failed", e) // the raw reason is for logcat, not the user
+                sendError.value = if (restoreOnFailure) "Message not sent. Tap send to try again." else "Message not sent."
+                if (restoreOnFailure && messageText.isEmpty()) messageText = text
             }
         }
     }
 }
+
+private const val TAG = "ChatViewModel"

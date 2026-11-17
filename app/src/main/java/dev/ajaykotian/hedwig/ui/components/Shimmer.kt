@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import dev.ajaykotian.hedwig.ui.base.ComponentPreviews
@@ -32,10 +33,11 @@ import dev.ajaykotian.hedwig.ui.theme.HedwigTheme
 @Composable
 fun Shimmer(
     modifier: Modifier = Modifier,
-    shape: Shape = RoundedCornerShape(8.dp)
+    shape: Shape = RoundedCornerShape(8.dp),
+    color: Color = MaterialTheme.colorScheme.onSurface,
 ) {
-    val base = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
-    val highlight = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.16f)
+    val base = color.copy(alpha = 0.08f)
+    val highlight = color.copy(alpha = 0.16f)
 
     val transition = rememberInfiniteTransition(label = "shimmer")
     val progress by transition.animateFloat(

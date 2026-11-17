@@ -10,9 +10,7 @@ val GreyTranslucent = Color(0x7A000000)    // grey_translucent (overlays)
 val HedwigPurpleDark = Color(0xFF4A2580)   // outgoing bubbles in dark mode
 
 // Chat colors from the WhatsApp clone reference.
-val DarkSlate200 = Color(0xFF232D36)
 val ChatBackgroundLight = Color(0xFFECE5DD)
-val ChatBackgroundDark = Color(0xFF0B141A)
 val ReadTickBlue = Color(0xFF34B7F1)
 
 // Purple-tinted neutrals, shared with hedwig-web (public/css/styles.css).
