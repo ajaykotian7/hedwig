@@ -9,6 +9,7 @@
   --keyboard: #E9E4EF; --key: #FFFFFF; --nav-pill: #1D1B20;
   --bone: rgba(29, 27, 32, 0.08); --bone-hi: rgba(29, 27, 32, 0.16);
   --bar-bone: rgba(255, 255, 255, 0.18);
+  --tick-read: #0A7AC9; /* 3.45:1 on the light outgoing bubble; #34B7F1 was 1.7:1 */
 }
 .dark {
   /* New dark tokens: chatBackground = BackgroundDark, incomingBubble = SurfaceHighDark (see README). */
@@ -21,6 +22,7 @@
   --keyboard: #1D1A22; --key: #2A2631; --nav-pill: #E6E0E9;
   --bone: rgba(230, 224, 233, 0.07); --bone-hi: rgba(230, 224, 233, 0.14);
   --bar-bone: rgba(230, 224, 233, 0.12);
+  --tick-read: #34B7F1; /* 4.9:1 on the dark outgoing bubble */
 }
 body { margin: 0; }
 @keyframes blink { 50% { opacity: 0; } }
@@ -61,6 +63,15 @@ body { margin: 0; }
 .time { position: absolute; right: 10px; bottom: 5px; font-size: 11px; line-height: 14px; font-feature-settings: "tnum"; white-space: nowrap; }
 .mine .time { color: var(--time-out); }
 .theirs .time { color: var(--time-in); }
+
+/* Phase 9b: ticks after the time on my messages, and a chip between days. */
+.time { display: flex; align-items: center; gap: 3px; }
+.mine .spacer { width: 80px; }
+.tick { width: 16px; height: 16px; flex-shrink: 0; }
+.tick.read { color: var(--tick-read); }
+.day { align-self: center; margin: 10px 0 2px; padding: 4px 12px; border-radius: 8px;
+  background: var(--bubble-in); box-shadow: var(--shadow); color: var(--secondary);
+  font-size: 12px; line-height: 16px; font-weight: 600; }
 
 /* "Jump to newest" button, shown only when scrolled away from the bottom. */
 .jump { position: absolute; right: 12px; bottom: 12px; width: 40px; height: 40px; border-radius: 50%;

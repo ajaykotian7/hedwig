@@ -1,6 +1,7 @@
 package dev.ajaykotian.hedwig.ui.chat
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
@@ -66,6 +67,7 @@ import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextLayoutResult
@@ -334,15 +336,26 @@ private fun MessageList(
 @Composable
 private fun DayHeader(date: LocalDate) {
     val label = remember(date) { formatDayHeader(date) }
-    Text(
-        text = label,
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 12.dp, bottom = 4.dp),
-        style = MaterialTheme.typography.labelMedium,
-        color = HedwigTheme.colors.secondaryText,
-        textAlign = TextAlign.Center,
-    )
+            .padding(top = 8.dp, bottom = 2.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Surface(
+            shape = RoundedCornerShape(8.dp),
+            color = HedwigTheme.colors.incomingBubble,
+            contentColor = HedwigTheme.colors.secondaryText,
+            shadowElevation = 1.dp,
+            modifier = Modifier.semantics { heading() },
+        ) {
+            Text(
+                text = label,
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+                style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.sp, lineHeight = 16.sp, fontWeight = FontWeight.SemiBold),
+            )
+        }
+    }
 }
 
 @Composable
@@ -403,7 +416,11 @@ private fun MessageMeta(time: String, status: MessageStatus?) {
             color = dimColor,
             maxLines = 1,
         )
-        if (status != null) StatusIcon(status, dimColor)
+        if (status != null) {
+            Crossfade(targetState = status, label = "status") { shownStatus ->
+                StatusIcon(shownStatus, dimColor)
+            }
+        }
     }
 }
 

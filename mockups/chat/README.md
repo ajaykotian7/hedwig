@@ -2,7 +2,7 @@
 
 Target design for the one-to-one chat screen (Phase 9a UI polish). Phone frame: 390×844, rendered at 2x.
 Colors come from `ui/theme/Color.kt`, and the font is Plus Jakarta Sans. The bubble language matches hedwig-web's chat pane, so both clients look like one product.
-Day headers and ✓ ticks are not shown here. They arrive in Phase 9b.
+Mocks 1–6 are the Phase 9a polish. Mocks 7–8 add the Phase 9b/9c polish: day headers and ✓ ticks.
 
 | # | Image | State |
 |---|-------|-------|
@@ -12,6 +12,8 @@ Day headers and ✓ ticks are not shown here. They arrive in Phase 9b.
 | 4 | [04-empty-light.png](04-empty-light.png) | No messages yet (light) |
 | 5 | [05-loading-dark.png](05-loading-dark.png) | Waiting for the first snapshot (dark) |
 | 6 | [06-send-error-light.png](06-send-error-light.png) | A send was rejected (light) |
+| 7 | [07-day-headers-light.png](07-day-headers-light.png) | Day headers; sent and pending ticks (light) |
+| 8 | [08-read-dark.png](08-read-dark.png) | The same chat after Riya read it (dark) |
 
 ## 1. Conversation
 
@@ -89,6 +91,34 @@ Day headers and ✓ ticks are not shown here. They arrive in Phase 9b.
 - **Pill:** `errorContainer` / `onErrorContainer` with an error icon, centred above the composer, 12dp corners, 13sp SemiBold. A plain `ErrorRow` would be hard to read on the wallpaper.
 - **Copy:** "Message not sent. Tap send to try again." The send button is active, because the text is back.
 - **It clears** on the next send, as it does now.
+
+## 7. Day headers and ticks (light)
+
+<img src="07-day-headers-light.png" width="260">
+
+- **Day header:** a chip, not bare text, so it stays readable on the wallpaper.
+  - `incomingBubble` background, 8dp corners, the light 1dp shadow
+  - 12sp / 16sp SemiBold in `secondaryText`, padding 12dp × 4dp
+  - "Today", "Yesterday", or a long date, in sentence case
+  - **Spacing:** 10dp above and below the chip. The next bubble always starts a new group, so it gets its tail.
+  - **TalkBack:** marked as a heading, so users can jump from day to day.
+- **Ticks:** 16dp, 3dp after the time, on my messages only.
+  - 🕓 `Schedule` while the write is local (the last bubble here, sent offline)
+  - ✓ `Done` when the server has it but Riya hasn't opened the chat
+  - ✓✓ `DoneAll` in `readTick` once she has
+  - Pending and sent use the time's colour (65% `onSurface`), so only "read" stands out.
+- **Read tick colour in light mode:** `#0A7AC9` instead of `#34B7F1`.
+  - `#34B7F1` on the light outgoing bubble `#E9DBFD` is **1.7:1**, below the 3:1 that WCAG asks for meaningful icons.
+  - `#0A7AC9` is **3.45:1** and still reads as "read receipt blue".
+- **The status change animates:** a short crossfade from 🕓 to ✓ to ✓✓, instead of an abrupt swap.
+
+## 8. Read (dark)
+
+<img src="08-read-dark.png" width="260">
+
+- The same chat once Riya opened it: every ✓ is now ✓✓.
+- **Dark read tick:** stays `#34B7F1`, which is 4.9:1 on `#4A2580`.
+- **Day chip:** `#241F2A`, the same as incoming bubbles. There's no shadow in dark mode.
 
 ## Source
 

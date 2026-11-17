@@ -11,7 +11,8 @@ val HedwigPurpleDark = Color(0xFF4A2580)   // outgoing bubbles in dark mode
 
 // Chat colors from the WhatsApp clone reference.
 val ChatBackgroundLight = Color(0xFFECE5DD)
-val ReadTickBlue = Color(0xFF34B7F1)
+val ReadTickBlue = Color(0xFF34B7F1)       // read ticks on the dark outgoing bubble (4.9:1)
+val ReadTickBlueLight = Color(0xFF0A7AC9)  // on HedwigPurpleLight (3.45:1); ReadTickBlue is only 1.7:1 there
 
 // Purple-tinted neutrals, shared with hedwig-web (public/css/styles.css).
 val TextLight = Color(0xFF1D1B20)
