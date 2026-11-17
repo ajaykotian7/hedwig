@@ -26,6 +26,9 @@ interface ChatRepository {
 
     /** The chat summary, or null while the chat has no messages (the first send creates the document). */
     fun observeChat(chatId: String): Flow<Chat?>
+
+    /** Resets [uid]'s unread count, which turns the other user's ticks blue. */
+    suspend fun markAsRead(chatId: String, uid: String)
 }
 
 @Singleton
@@ -85,6 +88,11 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
             trySend(snapshot?.toObject<Chat>()) // null when the document doesn't exist yet
         }
         awaitClose { registration.remove() }
+    }
+
+
+    override suspend fun markAsRead(chatId: String, uid: String) {
+        chats.document(chatId).update("unread.$uid", 0).await()
     }
 
     private companion object {

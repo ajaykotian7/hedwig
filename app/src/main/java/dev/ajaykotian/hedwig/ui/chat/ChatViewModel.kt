@@ -14,6 +14,7 @@ import dev.ajaykotian.hedwig.data.model.User
 import dev.ajaykotian.hedwig.data.repository.AuthRepository
 import dev.ajaykotian.hedwig.data.repository.ChatRepository
 import dev.ajaykotian.hedwig.data.repository.UserRepository
+import dev.ajaykotian.hedwig.notification.ActiveChatTracker
 import dev.ajaykotian.hedwig.ui.base.toLocalDate
 import dev.ajaykotian.hedwig.ui.navigation.ChatRoute
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -61,6 +63,7 @@ class ChatViewModel(
     authRepository: AuthRepository,
     userRepository: UserRepository,
     private val chatRepository: ChatRepository,
+    private val activeChatTracker: ActiveChatTracker
 ) : ViewModel() {
 
     private val otherUserId = savedStateHandle.toRoute<ChatRoute>().otherUserId
@@ -87,6 +90,32 @@ class ChatViewModel(
     }
         .catch { e -> emit(ChatUIState(isLoading = false, errorMessage = e.message ?: "Couldn't load messages")) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ChatUIState())
+
+    init {
+        // While this chat is on screen, incoming messages are read as soon as they arrive.
+        viewModelScope.launch {
+            combine(chatRepository.observeChat(chatId), activeChatTracker.activeChatId) { chat, activeChatId ->
+                activeChatId == chatId && chat != null && chat.unreadCountFor(myUid) > 0
+            }
+                .filter { it }
+                .catch { e -> Log.w(TAG, "Read tracking stopped", e) }
+                .collect {
+                    try {
+                        chatRepository.markAsRead(chatId, myUid)
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Mark as read failed", e)
+                    }
+                }
+        }
+    }
+
+    fun onScreenVisible() = activeChatTracker.onChatVisible(chatId)
+
+    fun onScreenHidden() = activeChatTracker.onChatHidden(chatId)
+
+    override fun onCleared() = activeChatTracker.onChatHidden(chatId)
 
 
     private fun buildEntries(messages: List<Message>, unreadByOther: Int): List<ChatEntry> {

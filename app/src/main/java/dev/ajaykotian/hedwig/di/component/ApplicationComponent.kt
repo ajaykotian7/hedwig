@@ -9,6 +9,7 @@ import dev.ajaykotian.hedwig.data.repository.ChatRepository
 import dev.ajaykotian.hedwig.data.repository.UserRepository
 import dev.ajaykotian.hedwig.di.ApplicationContext
 import dev.ajaykotian.hedwig.di.module.ApplicationModule
+import dev.ajaykotian.hedwig.notification.ActiveChatTracker
 import javax.inject.Singleton
 
 
@@ -28,4 +29,6 @@ interface ApplicationComponent {
     fun getUserRepository(): UserRepository
 
     fun getChatRepository(): ChatRepository
+
+    fun getActiveChatTracker(): ActiveChatTracker
 }

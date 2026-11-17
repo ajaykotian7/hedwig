@@ -79,6 +79,7 @@ import androidx.compose.ui.unit.constrainHeight
 import androidx.compose.ui.unit.constrainWidth
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.ajaykotian.hedwig.data.model.Message
 import dev.ajaykotian.hedwig.data.model.User
@@ -102,6 +103,13 @@ fun ChatScreen(
     viewModel: ChatViewModel = screenViewModel { getChatViewModel() },
 ) {
     LightStatusBarIcons()
+
+    // "Visible" means resumed: going home, switching apps or turning the screen off all count as leaving.
+    LifecycleResumeEffect(viewModel) {
+        viewModel.onScreenVisible()
+        onPauseOrDispose { viewModel.onScreenHidden() }
+    }
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     ChatContent(
         uiState = uiState,

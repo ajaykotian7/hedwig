@@ -7,6 +7,7 @@ import dagger.Provides
 import dev.ajaykotian.hedwig.data.repository.AuthRepository
 import dev.ajaykotian.hedwig.data.repository.ChatRepository
 import dev.ajaykotian.hedwig.data.repository.UserRepository
+import dev.ajaykotian.hedwig.notification.ActiveChatTracker
 import dev.ajaykotian.hedwig.ui.base.ViewModelProviderFactory
 import dev.ajaykotian.hedwig.ui.chat.ChatViewModel
 import dev.ajaykotian.hedwig.ui.login.LoginViewModel
@@ -43,8 +44,10 @@ class ScreenModule(private val owner: ViewModelStoreOwner) {
         authRepository: AuthRepository,
         userRepository: UserRepository,
         chatRepository: ChatRepository,
+        activeChatTracker: ActiveChatTracker
     ): ChatViewModel =
         ViewModelProvider(owner, ViewModelProviderFactory(ChatViewModel::class) { savedStateHandle ->
-            ChatViewModel(savedStateHandle, authRepository, userRepository, chatRepository)
+            ChatViewModel(savedStateHandle, authRepository, userRepository, chatRepository, activeChatTracker)
         })[ChatViewModel::class.java]
+
 }
