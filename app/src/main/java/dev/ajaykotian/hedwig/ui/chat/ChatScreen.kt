@@ -32,8 +32,11 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.DoneAll
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.ErrorOutline
+import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -81,6 +84,7 @@ import dev.ajaykotian.hedwig.data.model.Message
 import dev.ajaykotian.hedwig.data.model.User
 import dev.ajaykotian.hedwig.ui.base.PhoneDarkPreview
 import dev.ajaykotian.hedwig.ui.base.PhoneLightPreview
+import dev.ajaykotian.hedwig.ui.base.formatDayHeader
 import dev.ajaykotian.hedwig.ui.base.rememberTimeFormat
 import dev.ajaykotian.hedwig.ui.base.screenViewModel
 import dev.ajaykotian.hedwig.ui.components.Avatar
@@ -89,6 +93,7 @@ import dev.ajaykotian.hedwig.ui.components.LightStatusBarIcons
 import dev.ajaykotian.hedwig.ui.components.Shimmer
 import dev.ajaykotian.hedwig.ui.theme.HedwigTheme
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import kotlin.math.roundToInt
 
 @Composable
@@ -180,7 +185,7 @@ private fun ChatContent(
         when {
             uiState.isLoading -> MessageListShimmer(contentPadding = innerPadding)
 
-            uiState.messages.isEmpty() -> EmptyChat(
+            uiState.entries.isEmpty() -> EmptyChat(
                 name = uiState.otherUser.name,
                 onWaveClick = onWaveClick,
                 modifier = Modifier
@@ -188,7 +193,7 @@ private fun ChatContent(
                     .padding(innerPadding),
             )
 
-            else -> MessageList(messages = uiState.messages, contentPadding = innerPadding)
+            else -> MessageList(entries = uiState.entries, contentPadding = innerPadding)
         }
     }
 }
@@ -261,7 +266,7 @@ private fun EmptyChat(
 
 @Composable
 private fun MessageList(
-    messages: List<MessageItem>,
+    entries: List<ChatEntry>,
     contentPadding: PaddingValues,
 ) {
     val listState = rememberLazyListState()
@@ -270,7 +275,7 @@ private fun MessageList(
     val showJump by remember { derivedStateOf { listState.firstVisibleItemIndex > 0 } }
 
     // Scroll to the latest only if the user is not already on some particular message
-    val newest = messages.lastOrNull()
+    val newest = entries.lastOrNull() as? ChatEntry.MessageItem
     LaunchedEffect(newest?.message?.id) {
         if (newest != null && (newest.isMine || listState.firstVisibleItemIndex <= 1)) {
             listState.animateScrollToItem(0)
@@ -286,8 +291,15 @@ private fun MessageList(
             verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             // Newest first to match the reversed layout. asReversed() is a view, not a copy.
-            items(messages.asReversed(), key = { it.message.id }) { item ->
-                MessageBubble(item)
+            items(
+                items = entries.asReversed(),
+                key = { it.key },
+                contentType = { it::class }, // headers are only recycled as headers, bubbles as bubbles
+            ) { entry ->
+                when (entry) {
+                    is ChatEntry.DayHeader -> DayHeader(entry.date)
+                    is ChatEntry.MessageItem -> MessageBubble(entry)
+                }
             }
         }
         AnimatedVisibility(
@@ -310,15 +322,29 @@ private fun MessageList(
     }
 }
 
+
+@Composable
+private fun DayHeader(date: LocalDate) {
+    val label = remember(date) { formatDayHeader(date) }
+    Text(
+        text = label,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 12.dp, bottom = 4.dp),
+        style = MaterialTheme.typography.labelMedium,
+        color = HedwigTheme.colors.secondaryText,
+        textAlign = TextAlign.Center,
+    )
+}
+
 @Composable
 private fun TimedText(
     text: String,
-    time: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    meta: @Composable () -> Unit,
 ) {
     // Outlives recompositions on purpose: Text only re-reports its layout when the layout changes.
     val textLayout = remember { TextLayoutHolder() }
-    val timeColor = LocalContentColor.current.copy(alpha = 0.65f)
 
     Layout(
         modifier = modifier,
@@ -328,37 +354,59 @@ private fun TimedText(
                 style = MaterialTheme.typography.bodyLarge.copy(fontSize = 15.sp, lineHeight = 21.sp, letterSpacing = 0.sp),
                 onTextLayout = { textLayout.result = it },
             )
-            Text(
-                text = time,
-                style = MaterialTheme.typography.labelSmall.copy(lineHeight = 14.sp, fontFeatureSettings = "tnum"),
-                color = timeColor,
-                maxLines = 1,
-            )
+            Box { meta() }
         },
     ) { measurables, constraints ->
         val gap = 8.dp.roundToPx()
         val textPlaceable = measurables[0].measure(constraints.copy(minWidth = 0))
-        val timePlaceable = measurables[1].measure(Constraints()) // its natural size
+        val metaPlaceable = measurables[1].measure(Constraints()) // its natural size
         val textResult = checkNotNull(textLayout.result) { "Text didn't report its layout" }
 
         val lastLineEnd = textResult.getLineRight(textResult.lineCount - 1).roundToInt()
-        val fitsOnLastLine = lastLineEnd + gap + timePlaceable.width <= constraints.maxWidth
+        val fitsOnLastLine = lastLineEnd + gap + metaPlaceable.width <= constraints.maxWidth
 
         val width: Int
         val height: Int
         if (fitsOnLastLine) {
-            width = maxOf(textPlaceable.width, lastLineEnd + gap + timePlaceable.width)
+            width = maxOf(textPlaceable.width, lastLineEnd + gap + metaPlaceable.width)
             height = textPlaceable.height
         } else {
-            width = maxOf(textPlaceable.width, timePlaceable.width)
-            height = textPlaceable.height + timePlaceable.height
+            width = maxOf(textPlaceable.width, metaPlaceable.width)
+            height = textPlaceable.height + metaPlaceable.height
         }
 
         layout(constraints.constrainWidth(width), constraints.constrainHeight(height)) {
             textPlaceable.placeRelative(0, 0)
-            timePlaceable.placeRelative(width - timePlaceable.width, height - timePlaceable.height)
+            metaPlaceable.placeRelative(width - metaPlaceable.width, height - metaPlaceable.height)
         }
     }
+}
+
+@Composable
+private fun MessageMeta(time: String, status: MessageStatus?) {
+    val dimColor = LocalContentColor.current.copy(alpha = 0.65f)
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(3.dp),
+    ) {
+        Text(
+            text = time,
+            style = MaterialTheme.typography.labelSmall.copy(lineHeight = 14.sp, fontFeatureSettings = "tnum"),
+            color = dimColor,
+            maxLines = 1,
+        )
+        if (status != null) StatusIcon(status, dimColor)
+    }
+}
+
+@Composable
+private fun StatusIcon(status: MessageStatus, dimColor: Color) {
+    val (icon, tint, description) = when (status) {
+        MessageStatus.Pending -> Triple(Icons.Outlined.Schedule, dimColor, "Sending")
+        MessageStatus.Sent -> Triple(Icons.Filled.Done, dimColor, "Sent")
+        MessageStatus.Read -> Triple(Icons.Filled.DoneAll, HedwigTheme.colors.readTick, "Read")
+    }
+    Icon(icon, contentDescription = description, tint = tint, modifier = Modifier.size(16.dp))
 }
 
 private class TextLayoutHolder {
@@ -399,7 +447,7 @@ private fun listPadding(scaffoldPadding: PaddingValues) = PaddingValues(
 )
 
 @Composable
-private fun MessageBubble(item: MessageItem) {
+private fun MessageBubble(item: ChatEntry.MessageItem) {
     val colors = HedwigTheme.colors
     val timeFormat = rememberTimeFormat()
     val time = remember(item.message.timestamp, timeFormat) {
@@ -412,14 +460,15 @@ private fun MessageBubble(item: MessageItem) {
             contentColor = MaterialTheme.colorScheme.onSurface,
             shape = bubbleShape(item.isMine, item.isFirstInGroup),
             shadowElevation = 1.dp,
-            // TalkBack reads "Yes! What time? 8:01 PM" as one item, not two.
+            // TalkBack reads "Yes! What time? 8:01 PM, Read" as one item, not two.
             modifier = Modifier.semantics(mergeDescendants = true) {},
         ) {
             TimedText(
                 text = item.message.text,
-                time = time,
                 modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 6.dp, bottom = 6.dp),
-            )
+            ) {
+                MessageMeta(time = time, status = item.status)
+            }
         }
     }
 }
@@ -562,12 +611,13 @@ private fun ErrorPill(message: String, modifier: Modifier = Modifier) {
 
 private val PreviewUser = User(uid = "user-2", name = "Riya Sharma")
 
-private val PreviewMessages = listOf(
-    MessageItem(Message(id = "1", text = "Hey! Are we still on for tonight?"), isMine = false, isFirstInGroup = true),
-    MessageItem(Message(id = "2", text = "Yes! 8 pm works"), isMine = true, isFirstInGroup = true),
-    MessageItem(Message(id = "3", text = "I'll book a table at that new place near the station. Their pasta is supposed to be really good."), isMine = true, isFirstInGroup = false),
-    MessageItem(Message(id = "4", text = "Perfect 🙌"), isMine = false, isFirstInGroup = true),
-    MessageItem(Message(id = "5", text = "Can we move it to 8:30?"), isMine = false, isFirstInGroup = true),
+private val PreviewEntries: List<ChatEntry> = listOf(
+    ChatEntry.DayHeader(LocalDate.now()),
+    ChatEntry.MessageItem(Message(id = "1", text = "Hey! Are we still on for tonight?"), isMine = false, isFirstInGroup = true, status = null),
+    ChatEntry.MessageItem(Message(id = "2", text = "Yes! 8 pm works"), isMine = true, isFirstInGroup = true, status = MessageStatus.Read),
+    ChatEntry.MessageItem(Message(id = "3", text = "I'll book a table at that new place near the station. Their pasta is supposed to be really good."), isMine = true, isFirstInGroup = false, status = MessageStatus.Sent),
+    ChatEntry.MessageItem(Message(id = "4", text = "Perfect 🙌"), isMine = false, isFirstInGroup = true, status = null),
+    ChatEntry.MessageItem(Message(id = "5", text = "Can we move it to 8:30?"), isMine = false, isFirstInGroup = false, status = null),
 )
 
 @Composable
@@ -587,14 +637,14 @@ private fun ChatPreview(uiState: ChatUIState, messageText: String = "") {
 @PhoneLightPreview
 @Composable
 private fun ChatPreviewLight() = ChatPreview(
-    ChatUIState(isLoading = false, otherUser = PreviewUser, messages = PreviewMessages),
+    ChatUIState(isLoading = false, otherUser = PreviewUser, entries = PreviewEntries),
     messageText = "See you there",
 )
 
 @PhoneDarkPreview
 @Composable
 private fun ChatPreviewDark() = ChatPreview(
-    ChatUIState(isLoading = false, otherUser = PreviewUser, messages = PreviewMessages),
+    ChatUIState(isLoading = false, otherUser = PreviewUser, entries = PreviewEntries),
 )
 
 @PhoneLightPreview
@@ -606,7 +656,7 @@ private fun ChatEmptyPreview() = ChatPreview(
 @PhoneLightPreview
 @Composable
 private fun ChatErrorPreview() = ChatPreview(
-    ChatUIState(isLoading = false, otherUser = PreviewUser, messages = PreviewMessages, errorMessage = "Message not sent. Tap send to try again."),
+    ChatUIState(isLoading = false, otherUser = PreviewUser, entries = PreviewEntries, errorMessage = "Message not sent. Tap send to try again."),
     messageText = "Can we move it to 8:30?",
 )
 

@@ -16,6 +16,10 @@ data class Chat(
     /** Unread message count, keyed by user id. */
     val unread: Map<String, Long> = emptyMap(),
 ) {
+
+    /** How many messages [uid] hasn't read yet. */
+    fun unreadCountFor(uid: String): Int = unread[uid]?.toInt() ?: 0
+
     companion object {
         /** Both users derive the same id without a lookup: the two uids, sorted, joined by "_". */
         fun idFor(uid1: String, uid2: String): String = listOf(uid1, uid2).sorted().joinToString("_")

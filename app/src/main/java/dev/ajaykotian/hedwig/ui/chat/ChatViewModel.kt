@@ -14,6 +14,7 @@ import dev.ajaykotian.hedwig.data.model.User
 import dev.ajaykotian.hedwig.data.repository.AuthRepository
 import dev.ajaykotian.hedwig.data.repository.ChatRepository
 import dev.ajaykotian.hedwig.data.repository.UserRepository
+import dev.ajaykotian.hedwig.ui.base.toLocalDate
 import dev.ajaykotian.hedwig.ui.navigation.ChatRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,19 +23,36 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import kotlin.coroutines.cancellation.CancellationException
 
-data class MessageItem(
-    val message: Message,
-    val isMine: Boolean,
-    //First message in group of consecutive messages by the same sender
-    val isFirstInGroup: Boolean,
-)
+enum class MessageStatus { Pending, Sent, Read }
+
+
+sealed interface ChatEntry {
+    /** LazyColumn key. */
+    val key: String
+
+    data class DayHeader(val date: LocalDate) : ChatEntry {
+        override val key: String get() = "day-$date"
+    }
+
+    data class MessageItem(
+        val message: Message,
+        val isMine: Boolean,
+        // First message in a group of consecutive messages by the same sender on the same day
+        val isFirstInGroup: Boolean,
+        /** Ticks for my messages; null for theirs. */
+        val status: MessageStatus?,
+    ) : ChatEntry {
+        override val key: String get() = message.id
+    }
+}
 
 data class ChatUIState(
     val isLoading: Boolean = true,
     val otherUser: User = User(),
-    val messages: List<MessageItem> = emptyList(),
+    val entries: List<ChatEntry> = emptyList(),
     val errorMessage: String? = null,
 )
 
@@ -56,24 +74,50 @@ class ChatViewModel(
 
     val uiState: StateFlow<ChatUIState> = combine(
         userRepository.observeUser(otherUserId).catch { emit(null) },
+        chatRepository.observeChat(chatId).catch { emit(null) },
         chatRepository.observeMessages(chatId),
         sendError,
-    ) { otherUser, messages, error ->
+    ) { otherUser, chat, messages, error ->
         ChatUIState(
             isLoading = false,
             otherUser = otherUser ?: User(uid = otherUserId),
-            messages = messages.mapIndexed { index, message ->
-                MessageItem(
-                    message = message,
-                    isMine = message.senderId == myUid,
-                    isFirstInGroup = index == 0 || messages[index - 1].senderId != message.senderId,
-                )
-            },
+            entries = buildEntries(messages, unreadByOther = chat?.unreadCountFor(otherUserId) ?: 0),
             errorMessage = error,
         )
     }
         .catch { e -> emit(ChatUIState(isLoading = false, errorMessage = e.message ?: "Couldn't load messages")) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ChatUIState())
+
+
+    private fun buildEntries(messages: List<Message>, unreadByOther: Int): List<ChatEntry> {
+        // The other user's unread count N means my last N messages haven't been read yet.
+        val unreadIds = messages.filter { it.senderId == myUid }
+            .takeLast(unreadByOther)
+            .mapTo(HashSet()) { it.id }
+
+        val entries = mutableListOf<ChatEntry>()
+        var currentDay: LocalDate? = null
+        var previousSenderId: String? = null
+        for (message in messages) {
+            val isMine = message.senderId == myUid
+            var isFirstInGroup = message.senderId != previousSenderId
+            val day = message.timestamp?.toLocalDate()
+            if (day != null && day != currentDay) {
+                entries += ChatEntry.DayHeader(day)
+                currentDay = day
+                isFirstInGroup = true // a new day starts a new group
+            }
+            val status = when {
+                !isMine -> null
+                message.isPending -> MessageStatus.Pending
+                message.id in unreadIds -> MessageStatus.Sent
+                else -> MessageStatus.Read
+            }
+            entries += ChatEntry.MessageItem(message, isMine, isFirstInGroup, status)
+            previousSenderId = message.senderId
+        }
+        return entries
+    }
 
     fun onMessageTextChange(text: String) {
         messageText = text

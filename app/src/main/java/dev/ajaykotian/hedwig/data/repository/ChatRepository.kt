@@ -23,6 +23,9 @@ interface ChatRepository {
 
     /** Writes the message and updates the chat summary in one atomic batch. */
     suspend fun sendMessage(senderId: String, receiverId: String, text: String)
+
+    /** The chat summary, or null while the chat has no messages (the first send creates the document). */
+    fun observeChat(chatId: String): Flow<Chat?>
 }
 
 @Singleton
@@ -71,6 +74,17 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
             )
             .commit()
             .await()
+    }
+
+    override fun observeChat(chatId: String): Flow<Chat?> = callbackFlow {
+        val registration = chats.document(chatId).addSnapshotListener { snapshot, exception ->
+            if (exception != null) {
+                close(exception)
+                return@addSnapshotListener
+            }
+            trySend(snapshot?.toObject<Chat>()) // null when the document doesn't exist yet
+        }
+        awaitClose { registration.remove() }
     }
 
     private companion object {
