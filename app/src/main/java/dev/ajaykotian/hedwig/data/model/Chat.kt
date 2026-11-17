@@ -20,6 +20,9 @@ data class Chat(
     /** How many messages [uid] hasn't read yet. */
     fun unreadCountFor(uid: String): Int = unread[uid]?.toInt() ?: 0
 
+    /** The participant who isn't [myUid]. A chat with yourself lists you twice, so that falls back to you. */
+    fun otherParticipant(myUid: String): String = participants.firstOrNull { it != myUid } ?: myUid
+
     companion object {
         /** Both users derive the same id without a lookup: the two uids, sorted, joined by "_". */
         fun idFor(uid1: String, uid2: String): String = listOf(uid1, uid2).sorted().joinToString("_")

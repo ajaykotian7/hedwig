@@ -13,7 +13,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddComment
-import androidx.compose.material.icons.outlined.Forum
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -24,7 +23,6 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -36,7 +34,9 @@ import androidx.compose.ui.unit.sp
 import dev.ajaykotian.hedwig.R
 import dev.ajaykotian.hedwig.ui.base.PhoneDarkPreview
 import dev.ajaykotian.hedwig.ui.base.PhoneLightPreview
-import dev.ajaykotian.hedwig.ui.components.EmptyState
+import dev.ajaykotian.hedwig.ui.chats.ChatsTab
+import dev.ajaykotian.hedwig.ui.chats.ChatsTabContent
+import dev.ajaykotian.hedwig.ui.chats.ChatsUIState
 import dev.ajaykotian.hedwig.ui.components.HedwigTopAppBarDefaults
 import dev.ajaykotian.hedwig.ui.components.LightStatusBarIcons
 import dev.ajaykotian.hedwig.ui.profile.ProfileTab
@@ -49,10 +49,11 @@ private enum class HomeTab(val title: String) {
 }
 
 @Composable
-fun HomeScreen(onNewChatClick: () -> Unit) {
+fun HomeScreen(onNewChatClick: () -> Unit, onChatClick: (otherUserId: String) -> Unit) {
     LightStatusBarIcons()
     HomeContent(
         onNewChatClick = onNewChatClick,
+        chatsTab = { ChatsTab(onChatClick = onChatClick) },
         profileTab = { ProfileTab() },
     )
 }
@@ -61,6 +62,7 @@ fun HomeScreen(onNewChatClick: () -> Unit) {
 @Composable
 private fun HomeContent(
     onNewChatClick: () -> Unit,
+    chatsTab: @Composable () -> Unit,
     profileTab: @Composable () -> Unit,
     initialTab: HomeTab = HomeTab.Chats,
 ) {
@@ -140,13 +142,7 @@ private fun HomeContent(
             beyondViewportPageCount = 1
         ) { page ->
             when (tabs[page]) {
-                HomeTab.Chats -> EmptyState(
-                    icon = Icons.Outlined.Forum,
-                    title = "No chats yet",
-                    message = "Tap the new chat button to message anyone on hedwig.",
-                    modifier = Modifier.fillMaxSize(),
-                )
-
+                HomeTab.Chats -> chatsTab()
                 HomeTab.Profile -> profileTab()
             }
         }
@@ -159,6 +155,7 @@ private fun HomePreview(initialTab: HomeTab = HomeTab.Chats) {
     HedwigTheme {
         HomeContent(
             onNewChatClick = {},
+            chatsTab = { ChatsTabContent(ChatsUIState(isLoading = false), onChatClick = {}) },
             profileTab = {},
             initialTab = initialTab,
         )

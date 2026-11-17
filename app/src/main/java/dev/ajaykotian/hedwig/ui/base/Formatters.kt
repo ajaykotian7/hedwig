@@ -36,3 +36,19 @@ fun formatDayHeader(date: LocalDate, today: LocalDate = LocalDate.now()): String
     today.minusDays(1) -> "Yesterday"
     else -> date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG))
 }
+
+
+/** Chats list time: "8:02 PM" today, "Yesterday", otherwise a short date like "11/12/26". */
+@Composable
+fun rememberChatListTime(timestamp: Timestamp?): String {
+    val timeFormat = rememberTimeFormat()
+    return remember(timestamp, timeFormat) {
+        if (timestamp == null) return@remember ""
+        val today = LocalDate.now()
+        when (val date = timestamp.toLocalDate()) {
+            today -> timeFormat.format(timestamp.toDate())
+            today.minusDays(1) -> "Yesterday"
+            else -> date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
+        }
+    }
+}

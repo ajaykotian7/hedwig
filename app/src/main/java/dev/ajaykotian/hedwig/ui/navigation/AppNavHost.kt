@@ -50,6 +50,7 @@ fun AppNavHost(
         composable<HomeRoute> {
             HomeScreen(
                 onNewChatClick = { navController.navigate(NewChatRoute) },
+                onChatClick = { uid -> navController.navigate(ChatRoute(otherUserId = uid)) },
             )
         }
 

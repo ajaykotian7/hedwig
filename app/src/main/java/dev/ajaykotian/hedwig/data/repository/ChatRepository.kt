@@ -29,6 +29,9 @@ interface ChatRepository {
 
     /** Resets [uid]'s unread count, which turns the other user's ticks blue. */
     suspend fun markAsRead(chatId: String, uid: String)
+
+    /** [uid]'s chats, most recent first. */
+    fun observeChats(uid: String): Flow<List<Chat>>
 }
 
 @Singleton
@@ -93,6 +96,24 @@ class ChatRepositoryImpl @Inject constructor(private val firestore: FirebaseFire
 
     override suspend fun markAsRead(chatId: String, uid: String) {
         chats.document(chatId).update("unread.$uid", 0).await()
+    }
+
+
+    override fun observeChats(uid: String): Flow<List<Chat>> = callbackFlow {
+        // Sorted on the device: array-contains plus orderBy on another field needs a composite index.
+        val registration = chats
+            .whereArrayContains("participants", uid)
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    close(exception)
+                    return@addSnapshotListener
+                }
+                val result = snapshot?.documents.orEmpty()
+                    .mapNotNull { it.toObject<Chat>(DocumentSnapshot.ServerTimestampBehavior.ESTIMATE) }
+                    .sortedByDescending { it.lastMessageTime }
+                trySend(result)
+            }
+        awaitClose { registration.remove() }
     }
 
     private companion object {

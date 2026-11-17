@@ -33,11 +33,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.DoneAll
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.ErrorOutline
-import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -94,6 +91,7 @@ import dev.ajaykotian.hedwig.ui.components.Avatar
 import dev.ajaykotian.hedwig.ui.components.HedwigTopAppBarDefaults
 import dev.ajaykotian.hedwig.ui.components.LightStatusBarIcons
 import dev.ajaykotian.hedwig.ui.components.Shimmer
+import dev.ajaykotian.hedwig.ui.components.StatusIcon
 import dev.ajaykotian.hedwig.ui.theme.HedwigTheme
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -422,16 +420,6 @@ private fun MessageMeta(time: String, status: MessageStatus?) {
             }
         }
     }
-}
-
-@Composable
-private fun StatusIcon(status: MessageStatus, dimColor: Color) {
-    val (icon, tint, description) = when (status) {
-        MessageStatus.Pending -> Triple(Icons.Outlined.Schedule, dimColor, "Sending")
-        MessageStatus.Sent -> Triple(Icons.Filled.Done, dimColor, "Sent")
-        MessageStatus.Read -> Triple(Icons.Filled.DoneAll, HedwigTheme.colors.readTick, "Read")
-    }
-    Icon(icon, contentDescription = description, tint = tint, modifier = Modifier.size(16.dp))
 }
 
 private class TextLayoutHolder {
