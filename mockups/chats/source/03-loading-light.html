@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Chats loading</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="chats.css">
+</head>
+<body>
+<div class="screen">
+  <div class="top">
+    <div class="status"><span>9:41</span><span class="status-icons"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21L.6 8.4C3.7 5.6 7.7 4 12 4s8.3 1.6 11.4 4.4z"/></svg><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2 22h20V2z"/></svg><svg aria-hidden="true" width="10" height="16" viewBox="0 0 10 16" fill="currentColor"><path d="M3 0h4v2h2a1 1 0 011 1v12a1 1 0 01-1 1H1a1 1 0 01-1-1V3a1 1 0 011-1h2z"/></svg></span></div>
+    <div class="appbar"><span class="title">hedwig</span></div>
+    <div class="tabs" role="tablist">
+      <div class="tab selected" role="tab"><span>Chats</span></div>
+      <div class="tab" role="tab"><span>Profile</span></div>
+      <div class="indicator"></div>
+    </div>
+  </div>
+  <div class="list" aria-busy="true">
+    <div class="row"><span class="bone circle"></span><div class="row-main"><div class="line"><span class="bone" style="width: 120px; height: 14px; margin: 4px 0;"></span><span style="flex-grow: 1;"></span><span class="bone" style="width: 40px; height: 10px;"></span></div><div class="line"><span class="bone" style="width: 210px; height: 12px; margin: 4px 0;"></span></div></div></div>
+    <div class="row"><span class="bone circle"></span><div class="row-main"><div class="line"><span class="bone" style="width: 96px; height: 14px; margin: 4px 0;"></span><span style="flex-grow: 1;"></span><span class="bone" style="width: 40px; height: 10px;"></span></div><div class="line"><span class="bone" style="width: 160px; height: 12px; margin: 4px 0;"></span></div></div></div>
+    <div class="row"><span class="bone circle"></span><div class="row-main"><div class="line"><span class="bone" style="width: 140px; height: 14px; margin: 4px 0;"></span><span style="flex-grow: 1;"></span><span class="bone" style="width: 40px; height: 10px;"></span></div><div class="line"><span class="bone" style="width: 230px; height: 12px; margin: 4px 0;"></span></div></div></div>
+    <div class="row"><span class="bone circle"></span><div class="row-main"><div class="line"><span class="bone" style="width: 110px; height: 14px; margin: 4px 0;"></span><span style="flex-grow: 1;"></span><span class="bone" style="width: 40px; height: 10px;"></span></div><div class="line"><span class="bone" style="width: 180px; height: 12px; margin: 4px 0;"></span></div></div></div>
+    <div class="row"><span class="bone circle"></span><div class="row-main"><div class="line"><span class="bone" style="width: 128px; height: 14px; margin: 4px 0;"></span><span style="flex-grow: 1;"></span><span class="bone" style="width: 40px; height: 10px;"></span></div><div class="line"><span class="bone" style="width: 150px; height: 12px; margin: 4px 0;"></span></div></div></div>
+    <div class="row"><span class="bone circle"></span><div class="row-main"><div class="line"><span class="bone" style="width: 88px; height: 14px; margin: 4px 0;"></span><span style="flex-grow: 1;"></span><span class="bone" style="width: 40px; height: 10px;"></span></div><div class="line"><span class="bone" style="width: 200px; height: 12px; margin: 4px 0;"></span></div></div></div>
+    <div class="row"><span class="bone circle"></span><div class="row-main"><div class="line"><span class="bone" style="width: 132px; height: 14px; margin: 4px 0;"></span><span style="flex-grow: 1;"></span><span class="bone" style="width: 40px; height: 10px;"></span></div><div class="line"><span class="bone" style="width: 170px; height: 12px; margin: 4px 0;"></span></div></div></div>
+    <div class="row"><span class="bone circle"></span><div class="row-main"><div class="line"><span class="bone" style="width: 104px; height: 14px; margin: 4px 0;"></span><span style="flex-grow: 1;"></span><span class="bone" style="width: 40px; height: 10px;"></span></div><div class="line"><span class="bone" style="width: 220px; height: 12px; margin: 4px 0;"></span></div></div></div>
+    <div class="row"><span class="bone circle"></span><div class="row-main"><div class="line"><span class="bone" style="width: 116px; height: 14px; margin: 4px 0;"></span><span style="flex-grow: 1;"></span><span class="bone" style="width: 40px; height: 10px;"></span></div><div class="line"><span class="bone" style="width: 140px; height: 12px; margin: 4px 0;"></span></div></div></div>
+  </div>
+  <div class="fab" role="button" aria-label="New chat"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M22 4c0-1.1-.9-2-2-2H4c-1.1 0-1.99.9-1.99 2L2 16c0 1.1.9 2 2 2h14l4 4-.01-18zM17 11h-4v4h-2v-4H7V9h4V5h2v4h4v2z"/></svg></div>
+  <div class="nav"></div>
+</div>
+<script>
+// Put the indicator under the selected label's text, like matchContentSize = true.
+document.fonts.ready.then(() => {
+  const tabs = document.querySelector('.tabs');
+  const base = tabs.getBoundingClientRect();
+  const r = tabs.querySelector('.tab.selected span').getBoundingClientRect();
+  const ind = tabs.querySelector('.indicator');
+  ind.style.left = (r.left - base.left) + 'px';
+  ind.style.width = r.width + 'px';
+});
+</script>
+</body>
+</html>

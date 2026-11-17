@@ -10,4 +10,9 @@
         <item quantity="one">%d result</item>
         <item quantity="other">%d results</item>
     </plurals>
+
+    <plurals name="unread_messages">
+        <item quantity="one">%d unread message</item>
+        <item quantity="other">%d unread messages</item>
+    </plurals>
 </resources>
