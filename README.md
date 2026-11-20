@@ -8,14 +8,13 @@
   A real-time one-to-one messaging app for Android, built with <b>Jetpack Compose</b>, <b>Firebase</b> and <b>Dagger 2</b>.
 </p>
 
-<!--
-  To play the videos inline: edit this README on github.com, drag docs/demo.mp4 and docs/login.mp4
-  into the editor, and replace the two links below with the URLs GitHub inserts.
--->
-<p align="center">
-  ▶️ <a href="docs/demo.mp4"><b>Demo: chatting live (26 s)</b></a>: messages, read receipts turning blue, a notification<br>
-  ▶️ <a href="docs/login.mp4"><b>Demo: phone sign-in (13 s)</b></a>
-</p>
+### Chatting live: messages, read receipts turning blue, a notification
+
+https://github.com/user-attachments/assets/7ba41ed3-6138-4c20-b159-9b38a55c8102
+
+### Phone sign-in
+
+https://github.com/user-attachments/assets/b3f9f370-fdac-4cdf-925e-cd150489a71e
 
 | Chats | Conversation | Dark | Notifications |
 |:---:|:---:|:---:|:---:|
