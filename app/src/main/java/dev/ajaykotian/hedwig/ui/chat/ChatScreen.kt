@@ -89,7 +89,7 @@ import dev.ajaykotian.hedwig.ui.base.rememberTimeFormat
 import dev.ajaykotian.hedwig.ui.base.screenViewModel
 import dev.ajaykotian.hedwig.ui.components.Avatar
 import dev.ajaykotian.hedwig.ui.components.HedwigTopAppBarDefaults
-import dev.ajaykotian.hedwig.ui.components.LightStatusBarIcons
+import dev.ajaykotian.hedwig.ui.components.StatusBarIcons
 import dev.ajaykotian.hedwig.ui.components.Shimmer
 import dev.ajaykotian.hedwig.ui.components.StatusIcon
 import dev.ajaykotian.hedwig.ui.theme.HedwigTheme
@@ -102,7 +102,7 @@ fun ChatScreen(
     onBackClick: () -> Unit,
     viewModel: ChatViewModel = screenViewModel { getChatViewModel() },
 ) {
-    LightStatusBarIcons()
+    StatusBarIcons(onColoredTopBar = true)
 
     // "Visible" means resumed: going home, switching apps or turning the screen off all count as leaving.
     LifecycleResumeEffect(viewModel) {

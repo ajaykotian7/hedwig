@@ -73,7 +73,7 @@ import dev.ajaykotian.hedwig.ui.base.screenViewModel
 import dev.ajaykotian.hedwig.ui.components.Avatar
 import dev.ajaykotian.hedwig.ui.components.EmptyState
 import dev.ajaykotian.hedwig.ui.components.HedwigTopAppBarDefaults
-import dev.ajaykotian.hedwig.ui.components.LightStatusBarIcons
+import dev.ajaykotian.hedwig.ui.components.StatusBarIcons
 import dev.ajaykotian.hedwig.ui.components.Shimmer
 import dev.ajaykotian.hedwig.ui.theme.HedwigTheme
 
@@ -83,7 +83,7 @@ fun NewChatScreen(
     onContactClick: (uid: String) -> Unit,
     viewModel: NewChatViewModel = screenViewModel { getNewChatViewModel() },
 ) {
-    LightStatusBarIcons()
+    StatusBarIcons(onColoredTopBar = true)
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current

@@ -56,6 +56,7 @@ import dev.ajaykotian.hedwig.ui.components.FieldLabel
 import dev.ajaykotian.hedwig.ui.components.HedwigTextFieldDefaults
 import dev.ajaykotian.hedwig.ui.components.PrimaryButton
 import dev.ajaykotian.hedwig.ui.components.Shimmer
+import dev.ajaykotian.hedwig.ui.components.StatusBarIcons
 import dev.ajaykotian.hedwig.ui.components.SupportingRow
 import dev.ajaykotian.hedwig.ui.login.StepHeader
 import dev.ajaykotian.hedwig.ui.theme.HedwigTheme
@@ -63,6 +64,7 @@ import dev.ajaykotian.hedwig.ui.theme.HedwigTheme
 
 @Composable
 fun ProfileSetupScreen(onProfileSaved: () -> Unit, viewModel: ProfileViewModel = screenViewModel { getProfileViewModel() }) {
+    StatusBarIcons(onColoredTopBar = false)
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(uiState.isSaved) {

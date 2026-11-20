@@ -46,7 +46,7 @@ import dev.ajaykotian.hedwig.ui.chats.ChatsTab
 import dev.ajaykotian.hedwig.ui.chats.ChatsTabContent
 import dev.ajaykotian.hedwig.ui.chats.ChatsUIState
 import dev.ajaykotian.hedwig.ui.components.HedwigTopAppBarDefaults
-import dev.ajaykotian.hedwig.ui.components.LightStatusBarIcons
+import dev.ajaykotian.hedwig.ui.components.StatusBarIcons
 import dev.ajaykotian.hedwig.ui.profile.ProfileTab
 import dev.ajaykotian.hedwig.ui.theme.HedwigTheme
 import kotlinx.coroutines.launch
@@ -58,7 +58,7 @@ private enum class HomeTab(val title: String) {
 
 @Composable
 fun HomeScreen(onNewChatClick: () -> Unit, onChatClick: (otherUserId: String) -> Unit) {
-    LightStatusBarIcons()
+    StatusBarIcons(onColoredTopBar = true)
     RequestNotificationPermission()
     HomeContent(
         onNewChatClick = onNewChatClick,

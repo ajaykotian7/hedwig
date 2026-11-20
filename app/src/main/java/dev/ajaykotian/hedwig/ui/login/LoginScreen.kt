@@ -24,10 +24,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.ajaykotian.hedwig.ui.base.PhoneDarkPreview
 import dev.ajaykotian.hedwig.ui.base.PhoneLightPreview
 import dev.ajaykotian.hedwig.ui.base.screenViewModel
+import dev.ajaykotian.hedwig.ui.components.StatusBarIcons
 import dev.ajaykotian.hedwig.ui.theme.HedwigTheme
 
 @Composable
 fun LoginScreen(viewModel: LoginViewModel = screenViewModel { getLoginViewModel() }, onLoggedIn: () -> Unit) {
+    StatusBarIcons(onColoredTopBar = false)
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(uiState.isOtpValidated) {
