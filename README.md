@@ -5,6 +5,10 @@
 <h1 align="center">hedwig</h1>
 
 <p align="center">
+  <img src="https://github.com/ajaykotian7/hedwig/actions/workflows/build.yml/badge.svg" alt="Build status">
+</p>
+
+<p align="center">
   A real-time one-to-one messaging app for Android, built with <b>Jetpack Compose</b>, <b>Firebase</b> and <b>Dagger 2</b>.
 </p>
 
