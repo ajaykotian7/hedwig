@@ -1,5 +1,10 @@
 package dev.ajaykotian.hedwig.ui.home
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -24,13 +29,16 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import dev.ajaykotian.hedwig.R
 import dev.ajaykotian.hedwig.ui.base.PhoneDarkPreview
 import dev.ajaykotian.hedwig.ui.base.PhoneLightPreview
@@ -51,6 +59,7 @@ private enum class HomeTab(val title: String) {
 @Composable
 fun HomeScreen(onNewChatClick: () -> Unit, onChatClick: (otherUserId: String) -> Unit) {
     LightStatusBarIcons()
+    RequestNotificationPermission()
     HomeContent(
         onNewChatClick = onNewChatClick,
         chatsTab = { ChatsTab(onChatClick = onChatClick) },
@@ -146,6 +155,23 @@ private fun HomeContent(
                 HomeTab.Profile -> profileTab()
             }
         }
+    }
+}
+
+
+/** Asks for notification permission */
+@Composable
+private fun RequestNotificationPermission() {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return // granted at install on older versions
+
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
+        // Granted or denied, nothing else to do: NotificationHelper checks before every notification.
+    }
+    LaunchedEffect(Unit) {
+        val granted = ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
+                PackageManager.PERMISSION_GRANTED
+        if (!granted) launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
     }
 }
 

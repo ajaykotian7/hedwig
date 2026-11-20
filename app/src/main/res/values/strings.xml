@@ -15,4 +15,8 @@
         <item quantity="one">%d unread message</item>
         <item quantity="other">%d unread messages</item>
     </plurals>
+
+    <string name="notification_channel_messages">Messages</string>
+    <string name="notification_channel_messages_description">New messages from your chats</string>
+
 </resources>

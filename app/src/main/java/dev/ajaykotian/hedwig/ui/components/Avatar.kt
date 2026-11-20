@@ -34,7 +34,7 @@ fun Avatar(
     size: Dp = 48.dp,
 ) {
     val initials = initialsOf(name)
-    val color = AvatarColors[id.hashCode().absoluteValue % AvatarColors.size]
+    val color = avatarColorFor(id)
 
     Box(
         modifier = modifier
@@ -62,12 +62,16 @@ fun Avatar(
     }
 }
 
-private fun initialsOf(name: String): String =
+internal fun initialsOf(name: String): String =
     name.trim()
         .split(Regex("\\s+"))
         .filter { it.isNotEmpty() && it.first().isLetter() }
         .take(2)
         .joinToString("") { it.first().uppercase() }
+
+
+/** The avatar colour for [id]: the same user gets the same colour everywhere, notifications included. */
+internal fun avatarColorFor(id: String): Color = AvatarColors[id.hashCode().absoluteValue % AvatarColors.size]
 
 @Preview
 @Composable

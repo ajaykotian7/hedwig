@@ -2,4 +2,6 @@
 <resources>
     <!-- Window colors shown before Compose draws; match the Compose theme's background. -->
     <color name="window_background">#FFFFFFFF</color>
+
+    <color name="notification_accent">#FF8A38FF</color>
 </resources>

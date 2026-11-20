@@ -18,12 +18,25 @@ import kotlinx.coroutines.flow.Flow
 fun AppNavHost(
     startDestination: Any,
     signedOut: Flow<Unit>,
+    pendingNotificationChatUserId: String?,
+    onPendingChatHandled: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val navController = rememberNavController()
 
     LaunchedEffect(signedOut) {
         signedOut.collect { navController.navigateAndClearBackStack(LoginRoute) }
+    }
+
+    LaunchedEffect(pendingNotificationChatUserId) {
+        val otherUserId = pendingNotificationChatUserId ?: return@LaunchedEffect
+        if (startDestination != LoginRoute) {
+            navController.navigate(ChatRoute(otherUserId = otherUserId)) {
+                // Back to home screen irrespective of where user was earlier
+                popUpTo<HomeRoute>()
+            }
+        }
+        onPendingChatHandled()
     }
 
     NavHost(

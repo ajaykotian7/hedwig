@@ -15,6 +15,7 @@ import dev.ajaykotian.hedwig.data.repository.AuthRepository
 import dev.ajaykotian.hedwig.data.repository.ChatRepository
 import dev.ajaykotian.hedwig.data.repository.UserRepository
 import dev.ajaykotian.hedwig.notification.ActiveChatTracker
+import dev.ajaykotian.hedwig.notification.NotificationHelper
 import dev.ajaykotian.hedwig.ui.base.toLocalDate
 import dev.ajaykotian.hedwig.ui.navigation.ChatRoute
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -63,7 +64,8 @@ class ChatViewModel(
     authRepository: AuthRepository,
     userRepository: UserRepository,
     private val chatRepository: ChatRepository,
-    private val activeChatTracker: ActiveChatTracker
+    private val activeChatTracker: ActiveChatTracker,
+    private val notificationHelper: NotificationHelper,
 ) : ViewModel() {
 
     private val otherUserId = savedStateHandle.toRoute<ChatRoute>().otherUserId
@@ -111,7 +113,10 @@ class ChatViewModel(
         }
     }
 
-    fun onScreenVisible() = activeChatTracker.onChatVisible(chatId)
+    fun onScreenVisible() {
+        activeChatTracker.onChatVisible(chatId)
+        notificationHelper.cancelChatNotification(chatId)
+    }
 
     fun onScreenHidden() = activeChatTracker.onChatHidden(chatId)
 
